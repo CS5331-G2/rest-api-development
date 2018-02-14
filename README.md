@@ -96,10 +96,10 @@ Please fill out this section with details relevant to your team.
 
 ### Team Members
 
-1. Member 1 Name
-2. Member 2 Name
-3. Member 3 Name
-4. Member 4 Name
+1. Muhammad Mustaqiim Bin Muhar
+2. Ng Qing Hua
+3. Ng Zi Kai
+4. Yee Jian Feng, Eric
 
 ### Short Answer Questions
 
