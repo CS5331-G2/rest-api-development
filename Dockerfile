@@ -1,20 +1,16 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM microsoft/aspnetcore-build:2.0
+COPY . /app
 WORKDIR /app
 
-# copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
-
-# copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+# compile project
+RUN ["dotnet", "restore"]
+RUN ["dotnet", "build"]
 
 # expose ports
 EXPOSE 80
 EXPOSE 8080
 
-# build runtime image
-FROM microsoft/aspnetcore:2.0
-WORKDIR /app
-COPY --from=build-env /app/out .
-ENTRYPOINT ["dotnet", "diary.dll"]
+# transfer control to bash
+RUN chmod +x ./entrypoint.sh
+CMD /bin/bash ./entrypoint.sh
+
