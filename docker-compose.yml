@@ -1,0 +1,16 @@
+version: "3"
+services:
+    web:
+        build: .
+        ports:
+            - "8080:80"
+            - "80:80"
+        stdin_open: true
+        tty: true
+        depends_on:
+            - db
+    db:
+        image: "microsoft/mssql-server-linux"
+        environment:
+            SA_PASSWORD: "HelloWorld1a!"
+            ACCEPT_EULA: "Y"
