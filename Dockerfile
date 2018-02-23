@@ -1,14 +1,20 @@
-FROM ubuntu:latest
-RUN apt-get update
-RUN apt-get install -y python-pip
-RUN apt-get install -y apache2
-RUN pip install -U pip
-RUN pip install -U flask
-RUN pip install -U flask-cors
-RUN echo "ServerName localhost  " >> /etc/apache2/apache2.conf
-RUN echo "$user     hard    nproc       20" >> /etc/security/limits.conf
-ADD ./src/service /service
-ADD ./src/html /var/www/html
+FROM microsoft/aspnetcore-build:2.0 AS build-env
+WORKDIR /app
+
+# copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
+
+# expose ports
 EXPOSE 80
 EXPOSE 8080
-CMD ["/bin/bash", "/service/start_services.sh"]
+
+# build runtime image
+FROM microsoft/aspnetcore:2.0
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "diary.dll"]
