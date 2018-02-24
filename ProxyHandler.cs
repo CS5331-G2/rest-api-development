@@ -114,11 +114,11 @@ public class ProxyHandler
 
         if (host.Contains(diary.Program.WEBAPI_PORT)) 
         { // proxy to /api/{path}
-            return string.Format("{0}://{1}{2}?{3}", scheme, host, DeterminePath(path));
+            return string.Format("{0}://{1}{2}", scheme, host, DeterminePath(path));
         }
         else
         {
-            return string.Format("{0}://{1}{2}?{3}", scheme, host, path);
+            return string.Format("{0}://{1}{2}", scheme, host, path);
         }
     }
 
