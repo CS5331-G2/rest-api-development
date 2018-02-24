@@ -12,15 +12,20 @@ namespace diary
 {
     public class Program
     {
+        public static readonly string WEB_PORT = "80";
+        public static readonly string WEBAPI_PORT = "8080";
+
         public static void Main(string[] args)
         {
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:80", "http://*:8080")
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://*:" + WEB_PORT, "http://*:" + WEBAPI_PORT)
                 .UseStartup<Startup>()
                 .Build();
+        }
     }
 }
