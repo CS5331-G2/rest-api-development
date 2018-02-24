@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using diary.ApiModels.MetaController;
+using diary.ApiModels.DiaryController;
+using diary.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,54 +15,92 @@ namespace diary.Controllers
 
         // GET /api/diary OR :8080/diary
         [HttpGet]
-        public HeartbeatResponse Get()
+        public RetrieveDiaryResponse Get()
         {
-            return new HeartbeatResponse()
+            return new RetrieveDiaryResponse()
             {
-                Status = true
+                Status = true,
+                Result = Diary.Generate(true)
             };
         }
 
         // POST /api/diary OR :8080/diary
         [HttpPost]
-        public HeartbeatResponse Post()
+        public RetrieveDiaryResponse Post(RetrieveDiaryRequest retrieveRequest)
         {
-            return new HeartbeatResponse()
+            if (ModelState.IsValid)
             {
-                Status = true
+                return new RetrieveDiaryResponse()
+                {
+                    Status = true,
+                    Result = Diary.Generate()
+                };
+            }
+
+            return new RetrieveDiaryResponse()
+            {
+                Status = false
             };
         }
 
-        // POST /api/diary OR :8080/diary
+        // POST /api/diary/create OR :8080/diary/create
         [HttpPost]
         [Route("create")]
-        public HeartbeatResponse Create()
+        public CreateDiaryResponse Create(CreateDiaryRequest createRequest)
         {
-            return new HeartbeatResponse()
+            if (ModelState.IsValid)
             {
-                Status = true
+                return new CreateDiaryResponse()
+                {
+                    Status = true,
+                    Result = new Random().Next(1,1000).ToString()
+                };
+            }
+
+            return new CreateDiaryResponse()
+            {
+                Status = false,
+                Error = "Invalid Model"
             };
         }
 
-        // POST /api/diary OR :8080/diary
+        // POST /api/diary/delete OR :8080/diary/delete
         [HttpPost]
         [Route("delete")]
-        public HeartbeatResponse Delete()
+        public DeleteDiaryResponse Delete(DeleteDiaryRequest deleteRequest)
         {
-            return new HeartbeatResponse()
+            if (ModelState.IsValid)
             {
-                Status = true
+                return new DeleteDiaryResponse()
+                {
+                    Status = true
+                };
+            }
+
+            return new DeleteDiaryResponse()
+            {
+                Status = false,
+                Error = "Invalid Model"
             };
         }
 
-        // POST /api/diary OR :8080/diary
+        // POST /api/diary/permission OR :8080/diary/permission
         [HttpPost]
         [Route("permission")]
-        public HeartbeatResponse Permission()
+        public AdjustDiaryPermissionResponse Permission(AdjustDiaryPermissionRequest adjustRequest)
         {
-            return new HeartbeatResponse()
+            if (ModelState.IsValid)
             {
-                Status = true
+                return new AdjustDiaryPermissionResponse()
+                {
+                    Status = true
+                };
+            }
+
+            return new AdjustDiaryPermissionResponse()
+            {
+                Status = false,
+                Error = "Invalid Model"
             };
         }
     }
