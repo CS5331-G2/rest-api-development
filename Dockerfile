@@ -11,6 +11,8 @@ EXPOSE 80
 EXPOSE 8080
 
 # transfer control to bash
+RUN sed -i 's/\r//' ./entrypoint.sh
+RUN sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 CMD /bin/bash ./entrypoint.sh
 
