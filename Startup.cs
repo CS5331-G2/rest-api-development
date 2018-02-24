@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using diary.Data;
 using diary.Models;
 using diary.Services;
+using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace diary
 {
@@ -40,7 +42,7 @@ namespace diary
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -52,15 +54,36 @@ namespace diary
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
 
+            app.Use(async (context, next) =>
+            {
+                int? port = context.Request.Host.Port;
+                if (port.HasValue && port.Value == 8080 && !context.Request.Path.Value.StartsWith("/api"))
+                {
+                    ProxyHandler handler = new ProxyHandler(context);
+                    handler.ProxyToApi();
+                    handler.WriteResponse(context.Response);
+                }
+                else 
+                {
+                    //continues through the rest of the pipeline
+                    await next();
+                }
+            });
+
             app.UseMvc(routes =>
             {
+
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                );
+                
             });
         }
     }
