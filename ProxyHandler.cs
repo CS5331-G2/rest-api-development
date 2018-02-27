@@ -33,29 +33,24 @@ public class ProxyHandler
         if (request.Method != "GET")
         {
             request.ContentType = "application/json";
-
             _httpContext.Request.EnableRewind();
-            _httpContext.Request.Body.Position = 0;  //***** THIS IS REALLY IMPORTANT GOTCHA
                 
-            var requestStream = _httpContext.Request.Body;
-            Stream webStream = null;
             try
             {
                 //copy incoming request body to outgoing request
-                if (requestStream != null && requestStream.Length > 0)
+                if (_httpContext.Request.Body != null)
                 {
-                    request.ContentLength = requestStream.Length;
-                    webStream = request.GetRequestStream();
-                    requestStream.CopyTo(webStream);
+                    string body = new StreamReader(_httpContext.Request.Body).ReadToEnd();
+                    request.ContentLength = _httpContext.Request.Body.Length;
+                    using (StreamWriter writer = new StreamWriter(request.GetRequestStream()))
+                    {
+                        writer.Write(body);
+                    }
                 }
+                _httpContext.Request.Body.Position = 0;  //***** THIS IS REALLY IMPORTANT GOTCHA
             }
             finally
             {
-                if (null != webStream)
-                {
-                    webStream.Flush();
-                    webStream.Close(); 
-                }
             }
         }
 
