@@ -10,6 +10,9 @@ namespace diary.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<Diary> Diaries { get; set; }
+
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -28,6 +31,7 @@ namespace diary.Data
                     b.HasOne<ApplicationUser>()
                         .WithMany(a => a.Diaries)
                         .OnDelete(DeleteBehavior.Cascade);
+                    b.ToTable("Diary");
                 });
 
             builder.Entity<ApplicationUser>(b =>
