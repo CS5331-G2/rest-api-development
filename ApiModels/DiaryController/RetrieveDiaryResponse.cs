@@ -12,5 +12,8 @@ namespace diary.ApiModels.DiaryController
 
         [JsonProperty("result")]
         public List<Diary> Result;
+
+        [JsonProperty("result", NullValueHandling=NullValueHandling.Ignore)]
+        public string Error;
     }
 }
