@@ -36,5 +36,10 @@ namespace diary.Data
                         .HasMaxLength(36);
                 });
         }
+
+        public ApplicationUser GetUserWithToken(string uuidV4Token)
+        {
+            return new ApplicationUser();
+        }
     }
 }
