@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace diary.Data.Models
+namespace diary.Models
 {
     public class Diary
     {

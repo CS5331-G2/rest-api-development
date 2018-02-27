@@ -1,6 +1,6 @@
 
 using System.Collections.Generic;
-using diary.Data.Models;
+using diary.Models;
 using Newtonsoft.Json;
 
 namespace diary.ApiModels.DiaryController 
