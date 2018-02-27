@@ -12,16 +12,27 @@ namespace diary.Controllers
 {
     public class ConsumeDiaryController : Controller
     {
-        public async IActionResult Index()
+        public Diary GetDiary()
         {
+            //setting up connection
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri("http://localhost:8080/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.GetAsync("diary");
 
-            return View();
+            HttpResponseMessage response = client.GetAsync("diary").Result;
+
+            Diary diary = null;
+            if (response.IsSuccessStatusCode)
+            {
+                //need to read custom object
+            }
+            else
+            {
+                //need to handle something here
+            }
+            return diary;
 
         }
     }
