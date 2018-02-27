@@ -1,24 +1,25 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace diary.Data.Models
+namespace diary.Models
 {
     public class Diary
     {
         [JsonProperty("id")]
-        public int Id;
+        public int Id { get; set; }
         [JsonProperty("title")]
-        public string Title;
+        public string Title { get; set; }
         [JsonProperty("author")]
-        public string Author;
+        public string Author { get; set; }
         [JsonProperty("publish_date")]
-        public DateTime PublishDate;
+        public DateTime PublishDate { get; set; }
         [JsonProperty("public")]
-        public bool IsPublic;
+        public bool IsPublic { get; set; }
         [JsonProperty("text")]
-        public string Text;
+        public string Text { get; set; }
 
         public static List<Diary> Generate(bool publicOnly = false)
         {
