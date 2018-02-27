@@ -16,12 +16,12 @@ namespace diary.Controllers
         {
             //setting up connection
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:8080/");
+            client.BaseAddress = new Uri("http://localhost:8080");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            HttpResponseMessage response = client.GetAsync("diary").Result;
+            HttpResponseMessage response = client.GetAsync("/").Result;
 
             Diary diary = null;
             if (response.IsSuccessStatusCode)
