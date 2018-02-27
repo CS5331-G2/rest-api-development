@@ -10,6 +10,7 @@ namespace diary.Models
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
+        public string UuidV4Token { get; set; }
         public List<Diary> Diaries { get; set; }
     }
 }

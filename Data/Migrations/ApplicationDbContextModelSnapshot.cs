@@ -58,6 +58,9 @@ namespace diary.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
+                    b.Property<string>("UuidV4Token")
+                        .HasMaxLength(36);
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")

@@ -41,7 +41,8 @@ namespace diary.Migrations
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
                     SecurityStamp = table.Column<string>(nullable: true),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true)
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    UuidV4Token = table.Column<string>(maxLength: 36, nullable: true)
                 },
                 constraints: table =>
                 {

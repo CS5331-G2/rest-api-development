@@ -29,6 +29,12 @@ namespace diary.Data
                         .WithMany(a => a.Diaries)
                         .OnDelete(DeleteBehavior.Cascade);
                 });
+
+            builder.Entity<ApplicationUser>(b =>
+                {
+                    b.Property(a => a.UuidV4Token)
+                        .HasMaxLength(36);
+                });
         }
     }
 }

@@ -11,7 +11,7 @@ using System;
 namespace diary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180227074047_InitialCreate")]
+    [Migration("20180227085326_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,6 +58,9 @@ namespace diary.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
+
+                    b.Property<string>("UuidV4Token")
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
