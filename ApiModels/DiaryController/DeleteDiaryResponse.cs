@@ -9,7 +9,7 @@ namespace diary.ApiModels.DiaryController
         [JsonProperty("status")]
         public bool Status;
 
-        [JsonProperty("result", NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty("error", NullValueHandling=NullValueHandling.Ignore)]
         public string Error;
     }
 }
