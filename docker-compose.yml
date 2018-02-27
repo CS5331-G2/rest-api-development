@@ -11,6 +11,8 @@ services:
             - db
     db:
         image: "microsoft/mssql-server-linux"
+        ports:
+            - "1433:1433"
         environment:
             SA_PASSWORD: "HelloWorld1a!"
             ACCEPT_EULA: "Y"
