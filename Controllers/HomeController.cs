@@ -29,6 +29,13 @@ namespace diary.Controllers
             return View();
         }
 
+        public IActionResult Posts()
+        {
+            ViewData["Message"] = "This is post page.";
+
+            return View();
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

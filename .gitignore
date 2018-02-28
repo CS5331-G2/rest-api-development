@@ -5,6 +5,6 @@ obj/
 
 \.DS_Store
 
-diary\.sln
+*.sln
 
-diary\.userprefs
+*.userprefs
