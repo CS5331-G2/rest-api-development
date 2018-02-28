@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace diary.ApiModels.RootController 
 {
-    public class ImplementedsEndpointModel 
+    public class ImplementedEndpointsResponse
     {
         [JsonProperty("status")]
         public bool Status;

@@ -43,6 +43,7 @@ namespace diary.Data
 
         public ApplicationUser GetUserWithToken(string uuidV4Token)
         {
+            // TODO: With uuidv4 token, find user. Return null if no such token exists
             return new ApplicationUser();
         }
     }

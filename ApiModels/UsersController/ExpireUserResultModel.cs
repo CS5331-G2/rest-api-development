@@ -4,9 +4,7 @@ using Newtonsoft.Json;
 
 namespace diary.ApiModels.UsersController 
 {
-    public class ExpireUserResponse 
+    public class ExpireUserResultModel : ApiResultModel
     {
-        [JsonProperty("status")]
-        public bool Status;
     }
 }

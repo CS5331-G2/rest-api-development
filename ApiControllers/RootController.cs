@@ -28,14 +28,13 @@ namespace diary.Controllers
 
         // GET /api/root OR GET :8080/
         [HttpGet]
-        public ImplementedsEndpointModel Get()
+        public ImplementedEndpointsResponse Get()
         {
-            ImplementedsEndpointModel model = new ImplementedsEndpointModel()
+            return new ImplementedEndpointsResponse()
             {
                 Status = true,
                 Result = IMPLEMENTED_ENDPOINTS.ToList()
             };
-            return model;
         }
     }
 }
