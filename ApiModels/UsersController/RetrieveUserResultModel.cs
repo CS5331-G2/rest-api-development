@@ -4,11 +4,8 @@ using Newtonsoft.Json;
 
 namespace diary.ApiModels.UsersController 
 {
-    public class RetrieveUserResponse 
+    public class RetrieveUserResultModel : ApiResultModel 
     {
-        [JsonProperty("status")]
-        public bool Status;
-
         [JsonProperty("username")]
         public string Username;
 
@@ -17,8 +14,5 @@ namespace diary.ApiModels.UsersController
 
         [JsonProperty("age")]
         public int Age;
-
-        [JsonProperty("error", NullValueHandling=NullValueHandling.Ignore)]
-        public string Error;
     }
 }

@@ -1,13 +1,15 @@
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace diary.ApiModels.UsersController 
+namespace diary.ApiModels 
 {
-    public class RegisterUserResponse 
+    public class ApiResponseModel
     {
         [JsonProperty("status")]
         public bool Status;
+
+        [JsonProperty("result", NullValueHandling=NullValueHandling.Ignore)]
+        public ApiResultModel Result;
 
         [JsonProperty("error", NullValueHandling=NullValueHandling.Ignore)]
         public string Error;

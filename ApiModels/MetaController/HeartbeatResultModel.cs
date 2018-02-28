@@ -4,9 +4,7 @@ using Newtonsoft.Json;
 
 namespace diary.ApiModels.MetaController 
 {
-    public class HeartbeatResponse 
+    public class HeartbeatResultModel : ApiResultModel 
     {
-        [JsonProperty("status")]
-        public bool Status;
     }
 }

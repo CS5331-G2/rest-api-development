@@ -4,11 +4,8 @@ using Newtonsoft.Json;
 
 namespace diary.ApiModels.UsersController 
 {
-    public class AuthenticateUserResponse 
+    public class AuthenticateUserResultModel : ApiResultModel
     {
-        [JsonProperty("status")]
-        public bool Status;
-
         [JsonProperty("token")]
         public string Token;
     }

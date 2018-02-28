@@ -15,8 +15,8 @@ namespace diary.ApiModels.DiaryController
         [Required]
         public string Id;
 
-        [JsonProperty("private")]
+        [JsonProperty("public")]
         [Required]
-        public bool IsPrivate;
+        public bool IsPublic;
     }
 }
