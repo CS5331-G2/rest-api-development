@@ -1,16 +1,27 @@
-﻿<script>
+﻿<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"></script>
+<script>
 $(document).ready(function() {
   $('#submit').click(function() {
+    event.preventDefault();
+
     $.ajax({
-    url: 'http://localhost:8080/diary/create',
-    data: JSON.stringify({
-          token: $('#token').val(),
-          title: $('#title').val(),
-          public: $('#public').val(),
-          text: $('#text').val()}),
-    type: 'POST',
-    contentType: 'application/json; charset=utf-8'
+        type: "POST",
+        url: 'http://localhost:8080/diary/create',
+        data: {
+              "token": "hekejkj",
+              "title": "bello",
+              "public": "false",
+              "text": "heloworld"
+        },
+        contentType: 'application/json; charset=utf-8',
+        success: function(result) {
+            alert('Success');
+        },
+        error: function(jqxhr, status, exception) {
+            alert('Exception:', status);
+        }
     });
+    console.log(data)
   });
 });
 </script>
