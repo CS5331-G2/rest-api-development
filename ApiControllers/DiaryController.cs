@@ -34,7 +34,7 @@ namespace diary.Controllers
 
         // POST /api/diary OR :8080/diary
         [HttpPost]
-        public RetrieveDiaryResponse Post(RetrieveDiaryRequest retrieveRequest)
+        public RetrieveDiaryResponse Post([FromBody]RetrieveDiaryRequest retrieveRequest)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +101,7 @@ namespace diary.Controllers
         // POST /api/diary/delete OR :8080/diary/delete
         [HttpPost]
         [Route("delete")]
-        public DeleteDiaryResponse Delete(DeleteDiaryRequest deleteRequest)
+        public DeleteDiaryResponse Delete([FromBody]DeleteDiaryRequest deleteRequest)
         {
             int deleteId = 0;
             if (ModelState.IsValid && int.TryParse(deleteRequest.Id, out deleteId))
@@ -137,7 +137,7 @@ namespace diary.Controllers
         // POST /api/diary/permission OR :8080/diary/permission
         [HttpPost]
         [Route("permission")]
-        public AdjustDiaryPermissionResponse Permission(AdjustDiaryPermissionRequest adjustRequest)
+        public AdjustDiaryPermissionResponse Permission([FromBody]AdjustDiaryPermissionRequest adjustRequest)
         {
             int adjustId = 0;
             if (ModelState.IsValid && int.TryParse(adjustRequest.Id, out adjustId))

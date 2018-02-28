@@ -16,7 +16,7 @@ namespace diary.Controllers
         // POST /api/users/register OR :8080/users/register
         [HttpPost]
         [Route("register")]
-        public ApiResponseModel Register(RegisterUserRequest registerRequest)
+        public ApiResponseModel Register([FromBody]RegisterUserRequest registerRequest)
         {
             if (ModelState.IsValid)
             {
@@ -38,7 +38,7 @@ namespace diary.Controllers
         // POST /api/users/authenticate OR :8080/users/authenticate
         [HttpPost]
         [Route("authenticate")]
-        public ApiResponseModel Authenticate(AuthenticateUserRequest authenticationRequest)
+        public ApiResponseModel Authenticate([FromBody]AuthenticateUserRequest authenticationRequest)
         {
             if (ModelState.IsValid)
             {
@@ -62,7 +62,7 @@ namespace diary.Controllers
         // POST /api/users/expire OR :8080/users/expire
         [HttpPost]
         [Route("expire")]
-        public ApiResponseModel Expire(ExpireUserRequest expireRequest)
+        public ApiResponseModel Expire([FromBody]ExpireUserRequest expireRequest)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace diary.Controllers
 
         // POST /api/users OR :8080/users
         [HttpPost]
-        public ApiResponseModel Post(RetrieveUserRequest retrieveRequest)
+        public ApiResponseModel Post([FromBody]RetrieveUserRequest retrieveRequest)
         {
             if (ModelState.IsValid)
             {
