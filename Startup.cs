@@ -28,6 +28,24 @@ namespace diary
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string localhostOrigin = "";
+            if (diary.Program.WEB_PORT == "80")
+            {
+                localhostOrigin = "http://localhost";
+            }
+            else
+            {
+                localhostOrigin = "http://localhost:" + diary.Program.WEB_PORT;
+            }
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalhostOrigin",
+                    builder => builder.WithOrigins(localhostOrigin)
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader());
+            });
+            
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -59,6 +77,8 @@ namespace diary
             app.UseStaticFiles();
 
             app.UseAuthentication();
+
+            app.UseCors("AllowLocalhostOrigin");
 
             app.Use(async (context, next) =>
             {
