@@ -12,7 +12,7 @@ namespace diary
 {
     public class Program
     {
-        public static readonly string WEB_PORT = "80";
+        public static readonly string WEB_PORT = "8000";
         public static readonly string WEBAPI_PORT = "8080";
 
         public static void Main(string[] args)
