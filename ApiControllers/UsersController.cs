@@ -161,17 +161,20 @@ namespace diary.Controllers
             if (ModelState.IsValid)
             {
                 // TODO: with the uuidv4 token, find the user, then return informaion if user exists
-                string username = "User" + new Random().Next(1, 100);
+                //**START OF ZIKAI'S CODE */
+                ApplicationUser  user = _dbContext.GetUserWithToken(retrieveRequest.Token);
+
                 return new ApiResponseModel()
                 {
                     Status = true,
                     Result = new RetrieveUserResultModel()
                     {
-                        Username = username,
-                        Fullname = username + "'s Full Name",
-                        Age = new Random().Next(21, 30)
+                        Username = user.UserName,
+                        Fullname = user.Fullname,
+                        Age = user.Age
                     }
                 };
+                //**END OF ZIKAI'S CODE */
             }
 
             return new ApiResponseModel()
