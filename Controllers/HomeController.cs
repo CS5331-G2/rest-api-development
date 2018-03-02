@@ -12,7 +12,22 @@ namespace diary.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            PostSummaryViewModel postSModel = new PostSummaryViewModel();
+
+            Func<Diary, bool> postFilter = p => p.IsPublic;
+            IEnumerable<Diary> postModels = Diary.Generate().Where(postFilter);
+
+            postSModel.PostSummaries = postModels.Select(p => new PostSummaryViewModel.PostSummaryModel
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Author = p.Author,
+                PublishDate = p.PublishDate,
+                IsPublic = p.IsPublic,
+                Text = p.Text,
+            });
+    
+            return View(postSModel);
         }
 
         public IActionResult About()

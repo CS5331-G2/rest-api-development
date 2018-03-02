@@ -21,7 +21,7 @@ namespace diary.Models
         [JsonProperty("text")]
         public string Text { get; set; }
 
-        public static List<Diary> Generate(bool publicOnly = false)
+        public static List<Diary> Generate(bool publicOnly = true)
         {
             Random r = new Random();
             int entries = r.Next(0,10);
