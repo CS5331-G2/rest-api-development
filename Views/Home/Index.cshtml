@@ -3,22 +3,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<!-- Page Header -->
-<header class="masthead" style="background-image: url('/images/banner1.svg')">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
-                <div class="site-heading">
-                    <h1>Diary</h1>
-                    <span class="subheading">A Place Where You Can Express.</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-
-
+<!-- Main Content -->
 <div class="container">
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
@@ -33,21 +18,20 @@
                     }
                     else
                     {
-                        <div class="col-lg-8 col-md-12 mx-auto">
-                            <h4><small>RECENT POSTS</small></h4>
-                            <hr>
-                        </div>
+                        <h4><small>RECENT POSTS</small></h4>
+                        <hr>
 
                         foreach (var post in Model.PostSummaries)
                         {
                             <article>
-                                <div class="col-lg-8 col-md-12 mx-auto">
+                                <div class="post-preview">
                                     <h2><a asp-page="/post" asp-route-id="@post.Id.ToString("N")" asp-route-slug="">@post.Title</a></h2>
                                     <div class="h5 text-muted">@post.PublishDate.ToString("MMM dd, yyyy")</div>
                                     <p class="lead">@post.Text</p>
                                     <div class="h4"><a asp-page="/post" asp-route-id="@post.Id.ToString("N")" asp-route-slug=""><span class="glyphicon glyphicon-comment"></span> @post.Author</a></div>
                                 </div>
                             </article>
+                            <hr>
                         }
                     }
                 }
