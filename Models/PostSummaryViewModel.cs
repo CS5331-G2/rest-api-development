@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace diary.Models
 {
-    public class PostSummaryViewModel : PageModel
+    public class PostSummaryViewModel
     {
         public IEnumerable<PostSummaryModel> PostSummaries { get; set; }
 
