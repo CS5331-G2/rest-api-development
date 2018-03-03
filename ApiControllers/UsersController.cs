@@ -99,6 +99,10 @@ namespace diary.Controllers
                     //Assign token to user
                     String token = Guid.NewGuid().ToString();
 
+                    ApplicationUser user = _dbContext.Users.Find(username);
+                    user.UuidV4Token  = token;
+                    _dbContext.SaveChanges();
+
                     return new ApiResponseModel()
                     {
                         Status = true,
@@ -115,7 +119,6 @@ namespace diary.Controllers
                     };
                 }
             }
-            //**END OF ZIKAIS CODE */
             return new ApiResponseModel()
             {
                 Status = false
@@ -131,9 +134,10 @@ namespace diary.Controllers
             {
                 // TODO: Find uuidv4 token belonging to an user and set it to null to expire it.
                 ApplicationUser user = _dbContext.GetUserWithToken(expireRequest.Token);
-                //TODO: SET TO NULL/
                 if (user != null)
                 {
+                    user.UuidV4Token = null;
+                    _dbContext.SaveChanges();
                     return new ApiResponseModel()
                     {
                         Status = true
