@@ -11,6 +11,10 @@ namespace diary.Models
     public class ApplicationUser : IdentityUser
     {
         public string UuidV4Token { get; set; }
+
+        public string Fullname {get; set;}
+        public int Age {get; set;}
+
         public List<Diary> Diaries { get; set; }
     }
 }
