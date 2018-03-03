@@ -11,8 +11,8 @@ using System;
 namespace diary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180227085326_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20180303184250_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,6 +28,8 @@ namespace diary.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<int>("Age");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -35,6 +37,8 @@ namespace diary.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("Fullname");
 
                     b.Property<bool>("LockoutEnabled");
 
