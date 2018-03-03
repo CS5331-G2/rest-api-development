@@ -37,25 +37,13 @@ namespace diary.Controllers
         {
             ViewData["Message"] = "This is diary post page.";
 
-            APIClient getpost = new APIClient();
-            getpost.GetDiary("http://localhost:8080/api/diary");
+            //APIClient apiClient = new APIClient();
+            //var test = apiClient.GetDiary("http://localhost:8080/api/diary");
+            //Console.Write(test.IsPublic);
 
-            //HttpClient client = new HttpClient();
-            //client.BaseAddress = new Uri("http://localhost:8080/api/diary");
-
-            //client.DefaultRequestHeaders.Accept.Add(
-            //    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-            
-            //HttpResponseMessage response = client.GetAsync("http://localhost:8080/api/diary").Result;
-
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    var dataObjects = response.Content.ReadAsStringAsync().Result;
-            //    foreach (var d in dataObjects)
-            //    {
-            //        Console.WriteLine("{0}", d);
-            //    }
-            //}
+            APIClient newClient = new APIClient();
+            var test2 = newClient.PostGetDiary("http://localhost:8080/api/diary", "6bf00d02-dffc-4849-a635-a21b08500d61");
+            //Console.Write(test2.Title);
 
             return View();
         }
