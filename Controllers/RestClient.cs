@@ -11,7 +11,7 @@ namespace diary.Controllers
 {
     public class RestClient
     {
-        private string Base_URL = "http://localhost/api";
+        private string Base_URL = "http://localhost/api/";
 
         public async Task<IEnumerable<Diary>> findAllAsync()
         {
@@ -34,7 +34,7 @@ namespace diary.Controllers
                 return new List<Diary>();
             }
         }
-        public async Task<Diary> findAsync(int id)
+        public async Task<DiaryPost> findAsync(int id)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace diary.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<Diary>(data);
+                    return JsonConvert.DeserializeObject<DiaryPost>(data);
                 }
                 return null;
             }
@@ -71,7 +71,7 @@ namespace diary.Controllers
                 return false;
             }
         }
-        public bool Edit(Diary post)
+        public bool Edit(DiaryPost post)
         {
             try
             {
