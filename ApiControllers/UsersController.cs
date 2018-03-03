@@ -144,7 +144,7 @@ namespace diary.Controllers
             if (ModelState.IsValid)
             {
                 // TODO: Find uuidv4 token belonging to an user and set it to null to expire it.
-                ApplicationUser user = _dbContext.GetUserWithToken(expireRequest.Token);
+                var user = _dbContext.Users.FirstOrDefault(p => p.UuidV4Token == expireRequest.Token);
                 if (user != null)
                 {
                     user.UuidV4Token = null;
@@ -178,7 +178,7 @@ namespace diary.Controllers
             if (ModelState.IsValid)
             {
                 // TODO: with the uuidv4 token, find the user, then return informaion if user exists
-                ApplicationUser  user = _dbContext.GetUserWithToken(retrieveRequest.Token);
+                var user = _dbContext.Users.FirstOrDefault(p => p.UuidV4Token == retrieveRequest.Token);
 
                 if(user != null){
                     return new ApiResponseModel()
