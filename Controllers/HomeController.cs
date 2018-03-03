@@ -5,25 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using diary.Models;
 
 namespace diary.Controllers
 {
     public class HomeController : Controller
     {
-
-        //public static readonly HttpClient client = new HttpClient();
-
-        //static async Task<Diary> GetDiaryAsync(string path)
-        //{
-        //    Diary diary = null;
-        //    HttpResponseMessage response = await client.GetStringAsync(path);
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        diary = await response.Content.ReadAsStreamAsync();
-        //    }
-        //    return diary;
-        //}
 
         public IActionResult Index()
         {
@@ -48,22 +37,25 @@ namespace diary.Controllers
         {
             ViewData["Message"] = "This is diary post page.";
 
-            HttpClient client = new HttpClient();
+            APIClient getpost = new APIClient();
+            getpost.GetDiary("http://localhost:8080/api/diary");
+
+            //HttpClient client = new HttpClient();
             //client.BaseAddress = new Uri("http://localhost:8080/api/diary");
 
-            client.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            //client.DefaultRequestHeaders.Accept.Add(
+            //    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             
-            HttpResponseMessage response = client.GetAsync("http://localhost:8080/api/diary").Result;
+            //HttpResponseMessage response = client.GetAsync("http://localhost:8080/api/diary").Result;
 
-            if (response.IsSuccessStatusCode)
-            {
-                var dataObjects = response.Content.ReadAsStringAsync().Result;
-                foreach (var d in dataObjects)
-                {
-                    Console.WriteLine("{0}", d);
-                }
-            }
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var dataObjects = response.Content.ReadAsStringAsync().Result;
+            //    foreach (var d in dataObjects)
+            //    {
+            //        Console.WriteLine("{0}", d);
+            //    }
+            //}
 
             return View();
         }
