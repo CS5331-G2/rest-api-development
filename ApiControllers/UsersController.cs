@@ -20,9 +20,13 @@ namespace diary.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public UsersController(ApplicationDbContext dbContext)
+        public UsersController(ApplicationDbContext dbContext, 
+                               SignInManager<ApplicationUser> signInManager,
+                               UserManager<ApplicationUser> userManager)
         {
             _dbContext = dbContext;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // POST /api/users/register OR :8080/users/register
@@ -57,7 +61,7 @@ namespace diary.Controllers
                         Age = registerRequest.Age,
                     };
 
-                    var created = await _userManager.CreateAsync(newUser, passwordHash);
+                    var created = await _userManager.CreateAsync(newUser, registerRequest.Password);
 
                     if(created.Succeeded){
                         return new ApiResponseModel(){
@@ -93,13 +97,12 @@ namespace diary.Controllers
                     newSHA.ComputeHash(System.Text.Encoding.Unicode.GetBytes(
                         authenticationRequest.Password)));
 
-                var result =  await _signInManager.PasswordSignInAsync(username, password,false, false);
+                var result =  await _signInManager.PasswordSignInAsync(username, authenticationRequest.Password,false, false);
                 if (result.Succeeded)
                 {
                     //Assign token to user
                     String token = Guid.NewGuid().ToString();
-
-                    ApplicationUser user = _dbContext.Users.Find(username);
+                    var user = _dbContext.Users.FirstOrDefault(p => p.UserName == username);
                     user.UuidV4Token  = token;
                     _dbContext.Users.Update(user);
                     if(_dbContext.SaveChanges() > 0){
@@ -141,7 +144,7 @@ namespace diary.Controllers
             if (ModelState.IsValid)
             {
                 // TODO: Find uuidv4 token belonging to an user and set it to null to expire it.
-                ApplicationUser user = _dbContext.GetUserWithToken(expireRequest.Token);
+                var user = _dbContext.Users.FirstOrDefault(p => p.UuidV4Token == expireRequest.Token);
                 if (user != null)
                 {
                     user.UuidV4Token = null;
@@ -175,7 +178,7 @@ namespace diary.Controllers
             if (ModelState.IsValid)
             {
                 // TODO: with the uuidv4 token, find the user, then return informaion if user exists
-                ApplicationUser  user = _dbContext.GetUserWithToken(retrieveRequest.Token);
+                var user = _dbContext.Users.FirstOrDefault(p => p.UuidV4Token == retrieveRequest.Token);
 
                 if(user != null){
                     return new ApiResponseModel()
