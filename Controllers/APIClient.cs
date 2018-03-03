@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -30,19 +31,21 @@ namespace diary.Controllers
             return diary;
         }
 
-        public Diary PostGetDiary(string path, string token)
-        {
-            Diary diary = null;
-            AuthToken authtoken = new AuthToken()
-            {
-                Token = token
-            };
-            StringContent content = new StringContent(JsonConvert.SerializeObject(authtoken));
-            var response = client.PostAsync(path, content);
-            Console.Write(content);
-            Console.Write(response);
-            return diary;
-        }
+        //currently not working
+        //public Diary PostGetDiary(string path, string token)
+        //{
+        //    Diary diary = null;
+        //    AuthToken authtoken = new AuthToken()
+        //    {
+        //        Token = token
+        //    };
+        //    StringContent content = new StringContent(JsonConvert.SerializeObject(authtoken), Encoding.UTF8, "application/json");
+        //    var response = client.PostAsync(path, content);
+        //    response.
+        //    Console.Write(content);
+        //    Console.Write(response);
+        //    return diary;
+        //}
 
     }
 }
