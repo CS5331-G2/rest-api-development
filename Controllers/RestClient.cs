@@ -34,6 +34,29 @@ namespace diary.Controllers
                 return new List<Diary>();
             }
         }
+
+        public async Task<IEnumerable<Diary>> findAllAsync(String username)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(Base_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.GetAsync("diary/" + username).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<Diary>>(data);
+                }
+                return new List<Diary>();
+            }
+            catch
+            {
+                return new List<Diary>();
+            }
+        }
+
         public async Task<DiaryPost> findAsync(int id)
         {
             try

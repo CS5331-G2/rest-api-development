@@ -1,0 +1,34 @@
+﻿@model DiaryPost
+
+@{
+    bool newPost = string.IsNullOrEmpty(Model.Title);
+    ViewData["Title"] = "Edit " + (Model.Title ?? "new post");
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post" id="edit" class="container" asp-controller="MyDiary" asp-action="Edit">
+    <div asp-validation-summary="All"></div>
+    <input type="hidden" asp-for="@Model.Id" />
+
+    <label asp-for="@Model.Title" class="label">Title</label>
+    <input asp-for="@Model.Title" required placeholder="Title of blog post" aria-describedby="desc_title" />
+    <span class="desc" id="desc_title">The title as it appears on the website</span>
+    <br />
+
+    <textarea asp-for="@Model.Text" rows="20" aria-label="Content">@Model.Text</textarea>
+    <br />
+
+    <input type="submit" value="Save" title="Save diary post" />
+
+    <input asp-for="@Model.IsPublic" />
+    <label asp-for="@Model.IsPublic">Is published</label>
+
+    @if (!newPost)
+    {
+        <input type="submit" value="Delete" class="delete" title="Delete diary post" asp-action="Delete" asp-route-id="@Model.Id" />
+    }
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
