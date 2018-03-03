@@ -15,7 +15,10 @@ namespace diary.Controllers
             PostSummaryViewModel postSModel = new PostSummaryViewModel();
 
             Func<Diary, bool> postFilter = p => p.IsPublic;
-            IEnumerable<Diary> postModels = Diary.Generate().Where(postFilter);
+
+            RestClient rc = new RestClient();
+
+            IEnumerable<Diary> postModels = rc.findAllAsync().Result.Where(postFilter);
 
             postSModel.PostSummaries = postModels.Select(p => new PostSummaryViewModel.PostSummaryModel
             {
