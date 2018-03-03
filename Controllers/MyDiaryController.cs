@@ -32,8 +32,6 @@ namespace diary.Controllers
             return Redirect("/MyDiary");
         }
 
-        [Route("/MyDiary/Edit/{id?}")]
-        [HttpGet, Authorize]
         public IActionResult UpdatePost(String id)
         {
             if (string.IsNullOrEmpty(id))

@@ -4,21 +4,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@{
-    if (Model != null)
-    {
-        if (!Model.Any())
+<div class="container">
+    @{
+        if (Model != null)
         {
-            <h1>Welcome!</h1>
-            <p>Get started and write your first diary post <a class="text-primary" asp-controller="MyDiary" asp-action="Edit">here</a>.</p>
-            <p>Happy Expressing!</p>
-        }
-        else
-        {
-            foreach (var post in Model)
+            if (!Model.Any())
             {
-                await Html.RenderPartialAsync("Post.cshtml", post);
+                <h1>Welcome!</h1>
+                <p>Get started and write your first diary post <a class="text-primary" asp-controller="MyDiary" asp-action="Edit">here</a>.</p>
+                <p>Happy Expressing!</p>
+            }
+            else
+            {
+                foreach (var post in Model)
+                {
+                    await Html.RenderPartialAsync("Post.cshtml", post);
+                }
             }
         }
     }
-}
+</div>

@@ -20,6 +20,7 @@ namespace diary.Models
         [Required]
         public string Author { get; set; }
         [Required]
+        [Display(Name = "Description")]
         public string Text { get; set; }
         [Required]
         public bool IsPublic { get; set; }

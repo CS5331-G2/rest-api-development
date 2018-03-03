@@ -6,28 +6,40 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form method="post" id="edit" class="container" asp-controller="MyDiary" asp-action="Edit">
-    <div asp-validation-summary="All"></div>
-    <input type="hidden" asp-for="@Model.Id" />
+<div class="row">
+    <div class="col-md-10">
+        <section>
+            <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Author" />
+                <h4>@ViewData["Title"]</h4>
+                <hr />
 
-    <label asp-for="@Model.Title" class="label">Title</label>
-    <input asp-for="@Model.Title" required placeholder="Title of blog post" aria-describedby="desc_title" />
-    <span class="desc" id="desc_title">The title as it appears on the website</span>
-    <br />
+                <div class="form-group">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Text"></label>
+                    <textarea asp-for="Text" class="form-control" rows="3">@Model.Text</textarea>
+                    <span asp-validation-for="Text" class="text-danger"></span>
+                </div>
 
-    <textarea asp-for="@Model.Text" rows="20" aria-label="Content">@Model.Text</textarea>
-    <br />
+                <br />
 
-    <input type="submit" value="Save" title="Save diary post" />
+                <button class="btn btn-default" type="submit" value="Save" title="Save diary post">Save</button>
+                <input asp-for="IsPublic" />
+                <label asp-for="IsPublic">Public Post</label>
 
-    <input asp-for="@Model.IsPublic" />
-    <label asp-for="@Model.IsPublic">Is published</label>
-
-    @if (!newPost)
-    {
-        <input type="submit" value="Delete" class="delete" title="Delete diary post" asp-action="Delete" asp-route-id="@Model.Id" />
-    }
-</form>
+                @if (!newPost)
+                {
+                    <button class="btn btn-default" type="submit" value="Delete" title="Delete diary post" asp-action="Delete" asp-route-id="@Model.Id">Delete</button>
+                }
+            </form>
+        </section>
+    </div>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
