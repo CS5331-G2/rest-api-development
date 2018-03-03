@@ -13,7 +13,7 @@ namespace diary.Controllers
     {
         private string Base_URL = "http://localhost/api";
 
-        public async Task<IEnumerable<PostSummaryViewModel.PostSummaryModel>> findAllAsync()
+        public async Task<IEnumerable<Diary>> findAllAsync()
         {
             try
             {
@@ -25,16 +25,16 @@ namespace diary.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<PostSummaryViewModel.PostSummaryModel>>(data);
+                    return JsonConvert.DeserializeObject<List<Diary>>(data);
                 }
-                return new List<PostSummaryViewModel.PostSummaryModel>();
+                return new List<Diary>();
             }
             catch
             {
-                return new List<PostSummaryViewModel.PostSummaryModel>();
+                return new List<Diary>();
             }
         }
-        public async Task<PostSummaryViewModel.PostSummaryModel> findAsync(int id)
+        public async Task<Diary> findAsync(int id)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace diary.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<PostSummaryViewModel.PostSummaryModel>(data);
+                    return JsonConvert.DeserializeObject<Diary>(data);
                 }
                 return null;
             }
@@ -55,7 +55,7 @@ namespace diary.Controllers
                 return null;
             }
         }
-        public bool Create(PostSummaryViewModel.PostSummaryModel post)
+        public bool Create(Diary post)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace diary.Controllers
                 return false;
             }
         }
-        public bool Edit(PostSummaryViewModel.PostSummaryModel post)
+        public bool Edit(Diary post)
         {
             try
             {
