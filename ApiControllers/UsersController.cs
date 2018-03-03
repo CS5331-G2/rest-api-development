@@ -21,10 +21,12 @@ namespace diary.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
 
         public UsersController(ApplicationDbContext dbContext, 
+                               SignInManager<ApplicationUser> signInManager,
                                UserManager<ApplicationUser> userManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // POST /api/users/register OR :8080/users/register
@@ -95,13 +97,12 @@ namespace diary.Controllers
                     newSHA.ComputeHash(System.Text.Encoding.Unicode.GetBytes(
                         authenticationRequest.Password)));
 
-                var result =  await _signInManager.PasswordSignInAsync(username, password,false, false);
+                var result =  await _signInManager.PasswordSignInAsync(username, authenticationRequest.Password,false, false);
                 if (result.Succeeded)
                 {
                     //Assign token to user
                     String token = Guid.NewGuid().ToString();
-
-                    ApplicationUser user = _dbContext.Users.Find(username);
+                    var user = _dbContext.Users.FirstOrDefault(p => p.UserName == username);
                     user.UuidV4Token  = token;
                     _dbContext.Users.Update(user);
                     if(_dbContext.SaveChanges() > 0){
