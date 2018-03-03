@@ -20,9 +20,11 @@ namespace diary.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public UsersController(ApplicationDbContext dbContext)
+        public UsersController(ApplicationDbContext dbContext, 
+                               UserManager<ApplicationUser> userManager)
         {
             _dbContext = dbContext;
+            _userManager = userManager;
         }
 
         // POST /api/users/register OR :8080/users/register
@@ -57,7 +59,7 @@ namespace diary.Controllers
                         Age = registerRequest.Age,
                     };
 
-                    var created = await _userManager.CreateAsync(newUser, passwordHash);
+                    var created = await _userManager.CreateAsync(newUser, registerRequest.Password);
 
                     if(created.Succeeded){
                         return new ApiResponseModel(){
