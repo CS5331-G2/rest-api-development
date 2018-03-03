@@ -101,7 +101,7 @@ namespace diary.Controllers
 
                     ApplicationUser user = _dbContext.Users.Find(username);
                     user.UuidV4Token  = token;
-
+                    _dbContext.Users.Update(user);
                     if(_dbContext.SaveChanges() > 0){
                         return new ApiResponseModel()
                         {
@@ -145,6 +145,7 @@ namespace diary.Controllers
                 if (user != null)
                 {
                     user.UuidV4Token = null;
+                    _dbContext.Users.Update(user);
                     if(_dbContext.SaveChanges() > 0){
                         return new ApiResponseModel()
                         {
