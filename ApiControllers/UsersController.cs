@@ -101,16 +101,24 @@ namespace diary.Controllers
 
                     ApplicationUser user = _dbContext.Users.Find(username);
                     user.UuidV4Token  = token;
-                    _dbContext.SaveChanges();
 
-                    return new ApiResponseModel()
-                    {
-                        Status = true,
-                        Result = new AuthenticateUserResultModel()
+                    if(_dbContext.SaveChanges() > 0){
+                        return new ApiResponseModel()
                         {
-                            Token = token
-                        }
-                    };
+                            Status = true,
+                            Result = new AuthenticateUserResultModel()
+                            {
+                                Token = token
+                            }
+                        };
+                    }else{
+                        return new ApiResponseModel()
+                        {
+                            Status = false,
+                            Error = "Database Error!"
+                        };
+                    }
+                    
                 }else{
                     return new ApiResponseModel()
                     {
@@ -137,11 +145,19 @@ namespace diary.Controllers
                 if (user != null)
                 {
                     user.UuidV4Token = null;
-                    _dbContext.SaveChanges();
-                    return new ApiResponseModel()
-                    {
-                        Status = true
-                    };
+                    if(_dbContext.SaveChanges() > 0){
+                        return new ApiResponseModel()
+                        {
+                            Status = true
+                        };
+                    }else{
+                        return new ApiResponseModel()
+                        {
+                            Status =  false,
+                            Error = "Database Error!"
+                        };
+                    }
+
                 }
             }
 
