@@ -57,6 +57,13 @@ namespace diary
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+
+            //Add session
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".Diary.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(3600);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +80,8 @@ namespace diary
             }
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+
+            app.UseSession();
 
             app.UseStaticFiles();
 
