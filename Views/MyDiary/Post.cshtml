@@ -1,0 +1,26 @@
+﻿@model DiaryPost
+@{
+    ViewData["Title"] = Model.Title;
+    ViewData["Description"] = Model.Text;
+    string host = Context.Request.Scheme + "://" + Context.Request.Host;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+    <link rel="canonical" href="@(host + Model.GetLink())" />
+}
+
+<article class="post container" itemscope itemtype="http://schema.org/BlogPosting" itemprop="blogPost">
+    <header>
+        <h1 itemprop="name headline"><a href="@Model.GetLink()" rel="canonical" itemprop="url">@Model.Title</a></h1>
+        <time datetime="@Model.PublishDate.ToString("s")" itemprop="datePublished">Published @Model.PublishDate.ToString("MMM d, yyyy")</time>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a asp-controller="MyDiary" asp-action="UpdatePost" title="Edit the post">Edit post</a>
+        }
+    </header>
+
+    <div itemprop="articleBody mainEntityOfPage" cdnify>
+        @Html.Raw(Model)
+    </div>
+</article>

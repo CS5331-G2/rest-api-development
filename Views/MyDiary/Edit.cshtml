@@ -1,0 +1,46 @@
+﻿@model DiaryPost
+
+@{
+    bool newPost = string.IsNullOrEmpty(Model.Title);
+    ViewData["Title"] = "Edit " + (Model.Title ?? "new post");
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-10">
+        <section>
+            <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" asp-action="UpdatePost">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Author" />
+                <h4>@ViewData["Title"]</h4>
+                <hr />
+
+                <div class="form-group">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" class="form-control" value="@Model.Title" readonly />
+                    <span asp-validation-for="Title" class="text-danger" style="display:none"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Text"></label>
+                    <textarea asp-for="Text" class="form-control" rows="3" readonly>@Model.Text</textarea>
+                    <span asp-validation-for="Text" class="text-danger" style="display:none"></span>
+                </div>
+
+                <br />
+
+                <button class="btn btn-default" type="submit" value="Save" title="Save diary post">Save</button>
+                <input asp-for="IsPublic" />
+                <label asp-for="IsPublic">Public Post</label>
+
+                @if (!newPost)
+                {
+                    <button class="btn btn-default" type="submit" value="Delete" title="Delete diary post" asp-action="Delete">Delete</button>
+                }
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
