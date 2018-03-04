@@ -27,6 +27,8 @@ namespace diary.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<int>("Age");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -34,6 +36,8 @@ namespace diary.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("Fullname");
 
                     b.Property<bool>("LockoutEnabled");
 

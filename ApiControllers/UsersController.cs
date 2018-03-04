@@ -6,53 +6,130 @@ using diary.ApiModels;
 using diary.ApiModels.UsersController;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using diary.Models;
+using diary.Data;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 namespace diary.Controllers
 {
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
+        private readonly ApplicationDbContext _dbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public UsersController(ApplicationDbContext dbContext, 
+                               SignInManager<ApplicationUser> signInManager,
+                               UserManager<ApplicationUser> userManager)
+        {
+            _dbContext = dbContext;
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
 
         // POST /api/users/register OR :8080/users/register
         [HttpPost]
         [Route("register")]
-        public ApiResponseModel Register([FromBody]RegisterUserRequest registerRequest)
+        public async Task<ApiResponseModel> Register([FromBody]RegisterUserRequest registerRequest)
         {
             if (ModelState.IsValid)
             {
-                // TODO: Perform registration after checking username not taken
                 Response.StatusCode = 201;
-                return new ApiResponseModel()
+
+                IQueryable<ApplicationUser> result = _dbContext.Users.Where(p => p.UserName == registerRequest.Username);
+                if (result.Count() > 0)
                 {
-                    Status = true
-                };
+                    return new ApiResponseModel()
+                    {
+                        Status = false,
+                        Error = "User already exists!"
+                    };
+                }
+                else
+                {
+                    SHA256 newSHA = SHA256Managed.Create();
+                    byte[] hashbytes = newSHA.ComputeHash(System.Text.Encoding.Unicode.GetBytes(registerRequest.Password));
+                    String passwordHash = System.Text.Encoding.Unicode.GetString(hashbytes);
+
+                    ApplicationUser newUser = new ApplicationUser()
+                    {
+                        UuidV4Token = System.Guid.NewGuid().ToString(),
+                        UserName = registerRequest.Username,
+                        Fullname = registerRequest.FullName,
+                        Age = registerRequest.Age,
+                    };
+
+                    var created = await _userManager.CreateAsync(newUser, registerRequest.Password);
+
+                    if(created.Succeeded){
+                        return new ApiResponseModel(){
+                            Status = true
+                        };
+                    }else{
+                        return new ApiResponseModel(){
+                            Status = false,
+                            Error = "Database Error!"
+                        };
+                    }
+                }
             }
-            
+
             return new ApiResponseModel()
             {
                 Status = false,
-                Error = "User already exists!"
+                Error = "Error registering user!"
             };
         }
 
         // POST /api/users/authenticate OR :8080/users/authenticate
         [HttpPost]
         [Route("authenticate")]
-        public ApiResponseModel Authenticate([FromBody]AuthenticateUserRequest authenticationRequest)
+        public async Task<ApiResponseModel> Authenticate([FromBody]AuthenticateUserRequest authenticationRequest)
         {
             if (ModelState.IsValid)
             {
                 // TODO: perform authentication
-                return new ApiResponseModel()
+                SHA256 newSHA = SHA256Managed.Create();
+                string username = authenticationRequest.Username;
+                string password = System.Text.Encoding.Unicode.GetString(
+                    newSHA.ComputeHash(System.Text.Encoding.Unicode.GetBytes(
+                        authenticationRequest.Password)));
+
+                var result =  await _signInManager.PasswordSignInAsync(username, authenticationRequest.Password,false, false);
+                if (result.Succeeded)
                 {
-                    Status = true,
-                    Result = new AuthenticateUserResultModel()
-                    {
-                        Token = Guid.NewGuid().ToString("D")
+                    //Assign token to user
+                    String token = Guid.NewGuid().ToString();
+                    var user = _dbContext.Users.FirstOrDefault(p => p.UserName == username);
+                    user.UuidV4Token  = token;
+                    _dbContext.Users.Update(user);
+                    if(_dbContext.SaveChanges() > 0){
+                        return new ApiResponseModel()
+                        {
+                            Status = true,
+                            Result = new AuthenticateUserResultModel()
+                            {
+                                Token = token
+                            }
+                        };
+                    }else{
+                        return new ApiResponseModel()
+                        {
+                            Status = false,
+                            Error = "Database Error!"
+                        };
                     }
-                };
+                    
+                }else{
+                    return new ApiResponseModel()
+                    {
+                        Status = false,
+                        Error = "Failed to authenticate User!"
+                    };
+                }
             }
-            
             return new ApiResponseModel()
             {
                 Status = false
@@ -67,10 +144,25 @@ namespace diary.Controllers
             if (ModelState.IsValid)
             {
                 // TODO: Find uuidv4 token belonging to an user and set it to null to expire it.
-                return new ApiResponseModel()
+                var user = _dbContext.Users.FirstOrDefault(p => p.UuidV4Token == expireRequest.Token);
+                if (user != null)
                 {
-                    Status = true
-                };
+                    user.UuidV4Token = null;
+                    _dbContext.Users.Update(user);
+                    if(_dbContext.SaveChanges() > 0){
+                        return new ApiResponseModel()
+                        {
+                            Status = true
+                        };
+                    }else{
+                        return new ApiResponseModel()
+                        {
+                            Status =  false,
+                            Error = "Database Error!"
+                        };
+                    }
+
+                }
             }
 
             return new ApiResponseModel()
@@ -86,17 +178,26 @@ namespace diary.Controllers
             if (ModelState.IsValid)
             {
                 // TODO: with the uuidv4 token, find the user, then return informaion if user exists
-                string username = "User" + new Random().Next(1, 100);
-                return new ApiResponseModel()
-                {
-                    Status = true,
-                    Result = new RetrieveUserResultModel()
+                var user = _dbContext.Users.FirstOrDefault(p => p.UuidV4Token == retrieveRequest.Token);
+
+                if(user != null){
+                    return new ApiResponseModel()
                     {
-                        Username = username,
-                        Fullname = username + "'s Full Name",
-                        Age = new Random().Next(21,30)
-                    }
-                };
+                        Status = true,
+                        Result = new RetrieveUserResultModel()
+                        {
+                            Username = user.UserName,
+                            Fullname = user.Fullname,
+                            Age = user.Age
+                        }
+                    };
+                }else{
+                    return new ApiResponseModel()
+                    {
+                        Status = false,
+                        Error = "Failed to retrieve user!"
+                    };
+                }
             }
 
             return new ApiResponseModel()
