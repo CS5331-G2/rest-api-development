@@ -25,6 +25,7 @@ namespace diary.Models
         [Required]
         public bool IsPublic { get; set; }
         public DateTime PublishDate { get; set; } = DateTime.UtcNow;
+        public String Token { get; set; }
 
         public string GetLink()
         {
