@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using diary.ApiModels.UsersController;
+using Microsoft.AspNetCore.Mvc;
 
 namespace diary.Controllers
 {
@@ -119,6 +121,21 @@ namespace diary.Controllers
                 client.BaseAddress = new Uri(Base_URL);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage response = client.DeleteAsync("diary/" + id).Result;
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool Register(RegisterUserRequest user)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(Base_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.PostAsync("users/register", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
                 return response.IsSuccessStatusCode;
             }
             catch

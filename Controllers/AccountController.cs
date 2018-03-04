@@ -13,6 +13,9 @@ using Microsoft.Extensions.Options;
 using diary.Models;
 using diary.Models.AccountViewModels;
 using diary.Services;
+using Newtonsoft.Json.Linq;
+using diary.ApiModels.UsersController;
+using Newtonsoft.Json;
 
 namespace diary.Controllers
 {
@@ -215,26 +218,24 @@ namespace diary.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+        public IActionResult Register(RegisterViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                RegisterUserRequest registerModel = new RegisterUserRequest();
+                registerModel.Username = model.UserName;
+                registerModel.FullName = model.FullName;
+                registerModel.Age = model.Age;
+                registerModel.Password = model.Password;
+
+                RestClient rc = new RestClient();
+                var result = rc.Register(registerModel);
+                if (result)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return View();
                 }
-                AddErrors(result);
+
             }
 
             // If we got this far, something failed, redisplay form 
