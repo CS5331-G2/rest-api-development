@@ -58,6 +58,9 @@ namespace diary
 
             services.AddMvc();
 
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
+
             //Add session
             services.AddSession(options =>
             {
