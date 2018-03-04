@@ -233,6 +233,7 @@ namespace diary.Controllers
                 var result = rc.Register(registerModel);
                 if (result)
                 {
+                    ViewData["Success"] = "Registration Successful!";
                     return View();
                 }
 
