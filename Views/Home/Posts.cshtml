@@ -1,0 +1,32 @@
+﻿<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#submit').click(function(){
+        var auth = {token: "6bf00d02-dffc-4849-a635-a21b08500d61"};
+
+        $.ajax({
+            type: "POST",
+            data :JSON.stringify(auth),
+            url: "http://localhost:8080/api/diary",
+            contentType: "application/json; charset=utf-8",
+            dataTye: "json",
+            success: function(result) {
+                alert('Success');
+            },
+            error: function(jqxhr, status, exception) {
+                alert('ERROR');
+            }
+        });
+    });
+});
+</script>
+
+@{
+    ViewData["Title"] = "Diary Post";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@ViewData["Message"]</h3>
+
+<p>Use this area to provide additional information.</p>
+<button id="submit" type="submit" class="btn btn-primary">Submit</button>
+
