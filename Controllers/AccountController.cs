@@ -57,7 +57,7 @@ namespace diary.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
@@ -69,11 +69,12 @@ namespace diary.Controllers
                 loginModel.Password = model.Password;
 
                 RestClient rc = new RestClient();
-                var result = rc.Login(loginModel);
+                var result = await rc.Login(loginModel);
 
                 //var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result)
                 {
+                    await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
