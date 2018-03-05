@@ -64,6 +64,41 @@ namespace diary.Controllers
             }
         }
 
+        public async Task<ApiResponseModel> UserInfoAsync(String token)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                RetrieveDiaryRequest diaryRequest = new RetrieveDiaryRequest
+                {
+                    Token = token
+                };
+
+                HttpResponseMessage response = client.PostAsync("users", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    ApiResponseModel responseModel = DeserializeJson<ApiResponseModel>(data);
+                    return responseModel;
+                }
+
+                return new ApiResponseModel()
+                {
+                    Status = false
+                };
+            }
+            catch
+            {
+                return new ApiResponseModel()
+                {
+                    Status = false
+                };
+            }
+        }
+
         public async Task<IEnumerable<Diary>> FindAllAsync()
         {
             try

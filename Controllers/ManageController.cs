@@ -13,6 +13,9 @@ using Microsoft.Extensions.Options;
 using diary.Models;
 using diary.Models.ManageViewModels;
 using diary.Services;
+using Microsoft.AspNetCore.Http;
+using diary.ApiModels;
+using diary.ApiModels.UsersController;
 
 namespace diary.Controllers
 {
@@ -54,16 +57,39 @@ namespace diary.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new IndexViewModel
-            {
-                Username = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IsEmailConfirmed = user.EmailConfirmed,
-                StatusMessage = StatusMessage
-            };
+            RestClient rc = new RestClient();
+            ApiResponseModel response = await rc.UserInfoAsync(HttpContext.Session.GetString(SessionState.SessionKeyToken));
 
-            return View(model);
+            if (response.Status)
+            {
+                RetrieveUserResultModel userModel = null;
+
+                if (response.Result.GetType() == typeof(RetrieveUserResultModel))
+                {
+                    userModel = (RetrieveUserResultModel)response.Result;
+                }
+                else
+                {
+                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                }
+
+                var model = new IndexViewModel
+                {
+                    Username = user.UserName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    IsEmailConfirmed = user.EmailConfirmed,
+                    StatusMessage = StatusMessage,
+                    Age = userModel.Age,
+                    FullName = userModel.Fullname
+                };
+
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
         }
 
         [HttpPost]

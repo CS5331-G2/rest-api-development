@@ -21,5 +21,10 @@ namespace diary.Models.ManageViewModels
         public string PhoneNumber { get; set; }
 
         public string StatusMessage { get; set; }
+
+        public String FullName { get; set; }
+
+        public int Age { get; set; }
+
     }
 }
