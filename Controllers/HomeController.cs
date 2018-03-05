@@ -18,7 +18,7 @@ namespace diary.Controllers
 
             RestClient rc = new RestClient();
 
-            IEnumerable<Diary> postModels = rc.findAllAsync().Result.Where(postFilter);
+            IEnumerable<Diary> postModels = rc.FindAllAsync().Result.Where(postFilter);
 
             postSModel.PostSummaries = postModels.Select(p => new PostSummaryViewModel.PostSummaryModel
             {

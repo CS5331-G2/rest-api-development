@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using diary.Models;
@@ -12,6 +13,7 @@ namespace diary.Controllers
         public IActionResult Index()
         {
             RestClient rc = new RestClient();
+            //change to token
             var posts = rc.findAllAsync(User.Identity.Name).Result.Select(p => new DiaryPost
             {
                 Id = p.Id,
@@ -25,25 +27,19 @@ namespace diary.Controllers
             return View(posts);
         }
 
-        public IActionResult Delete(int id)
+        //Change permission
+        [HttpPost]
+        public IActionResult UpdatePost(String token, DiaryPost post)
         {
-            RestClient rc = new RestClient();
-            rc.Delete(id);
-            return Redirect("/MyDiary");
-        }
-
-        public IActionResult UpdatePost(String id)
-        {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(post.Id.ToString()))
             {
                 return View(new DiaryPost());
             }
 
             RestClient rc = new RestClient();
-            DiaryPost post = new DiaryPost();
-            post = rc.findAsync(Int32.Parse(id)).Result;
-
-            if (post != null)
+            var success = rc.Edit(token, post);
+            
+            if (post != null && success)
             {
                 return View(post);
             }
@@ -51,6 +47,16 @@ namespace diary.Controllers
             return NotFound();
         }
 
+        //Create new post
+        [HttpGet]
+        public IActionResult Edit(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(new DiaryPost());
+        }
+
+        //Create new post
+        [HttpPost]
         public IActionResult Edit(DiaryPost post)
         {
             if (!ModelState.IsValid)
@@ -59,15 +65,17 @@ namespace diary.Controllers
             }
 
             RestClient rc = new RestClient();
-            DiaryPost old = rc.findAsync(post.Id).Result;
-
-            old.Title = post.Title.Trim();
-            old.Title = post.Text.Trim();
-            old.IsPublic = post.IsPublic;
-
-            rc.Edit(old);
+            var success = rc.Create(post.Title, post);
 
             return Redirect(post.GetLink());
+        }
+
+        [HttpPost]
+        public IActionResult Delete(String token, int id)
+        {
+            RestClient rc = new RestClient();
+            rc.Delete(token, id);
+            return Redirect("/MyDiary");
         }
 
         public IActionResult Error()
