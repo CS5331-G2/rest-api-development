@@ -6,3 +6,5 @@ obj/
 *.userprefs
 
 *.sln
+
+\.DS_Store

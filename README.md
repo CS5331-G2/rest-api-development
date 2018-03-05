@@ -85,14 +85,9 @@ If a response is received, you're good to go.
 
 ## Screenshots
 
-Please replace the example screenshots with screenshots of your completed
-project. Feel free to include more than one.
-
-![Sample Screenshot](./img/samplescreenshot.png)
+![Sample Screenshot](./img/LoginPage.png)
 
 ## Administration and Evaluation
-
-Please fill out this section with details relevant to your team.
 
 ### Team Members
 
@@ -105,39 +100,38 @@ Please fill out this section with details relevant to your team.
 
 #### Question 1: Briefly describe the web technology stack used in your implementation.
 
-Answer: Please replace this sentence with your answer.
+Answer: .Net Core Framework 2.0 :metal:
 
 #### Question 2: Are there any security considerations your team thought about?
 
-Answer: Please replace this sentence with your answer.
+Answer: Avoid the usual XSS, SQL Injection & proper session handling.
 
 #### Question 3: Are there any improvements you would make to the API specification to improve the security of the web application?
 
-Answer: Please replace this sentence with your answer.
+Answer: Implement JWT Tokens. Query API over https.
 
 #### Question 4: Are there any additional features you would like to highlight?
 
-Answer: Please replace this sentence with your answer.
+Answer: The fact that we're probably the only group who used .Net?
 
 #### Question 5: Is your web application vulnerable? If yes, how and why? If not, what measures did you take to secure it?
 
-Answer: Please replace this sentence with your answer.
+Answer: Of course not? One of the most secure Web Application ever coded within 2 weeks out there! :sunglasses:
 
 #### Feedback: Is there any other feedback you would like to give?
 
-Answer: Please replace this sentence with your answer.
+Answer: 🤷
 
 ### Declaration
 
-#### Please declare your individual contributions to the assignment:
-
-1. Member 1 Name
-    - Integrated feature x into component y
-    - Implemented z
-2. Member 2 Name
-    - Wrote the front-end code
-3. Member 3 Name
-    - Designed the database schema
-4. Member 4 Name
-    - Implemented x
-
+1. Muhammad Mustaqiim Bin Muhar
+    - Devops stuff -> Initialized docker-compose with .Net Core installation
+    - Unit testing & random bug fixes (Auth bug)
+    - Documentation
+2. Ng Qing Hua
+    - Introduced .Net Core Framework & prepared framework skeleton
+    - Diary API
+3. Ng Zi Kai
+    - Authentication API
+4. Yee Jian Feng, Eric
+    - Implemented front end UI
