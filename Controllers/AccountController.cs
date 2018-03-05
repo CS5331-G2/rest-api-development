@@ -140,6 +140,10 @@ namespace diary.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            ExpireUserRequest expireUser = new ExpireUserRequest();
+            expireUser.Token = HttpContext.Session.GetString(SessionState.SessionKeyToken);
+            RestClient rc = new RestClient();
+            rc.Logout(expireUser);
             _logger.LogInformation("User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

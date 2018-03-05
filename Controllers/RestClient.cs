@@ -202,6 +202,22 @@ namespace diary.Controllers
                 return false;
             }
         }
+        public bool Logout(ExpireUserRequest user)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.PostAsync("users/expire", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<ApiResponseModel> Login(AuthenticateUserRequest user)
         {
             try
