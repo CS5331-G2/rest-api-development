@@ -100,7 +100,7 @@ namespace diary.Controllers
                 };
 
                 HttpResponseMessage response = client.PostAsync("diary", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
@@ -202,7 +202,7 @@ namespace diary.Controllers
                 return false;
             }
         }
-        public async Task<bool> Login(AuthenticateUserRequest user)
+        public async Task<ApiResponseModel> Login(AuthenticateUserRequest user)
         {
             try
             {
@@ -214,11 +214,22 @@ namespace diary.Controllers
                 {
                     string body = await response.Content.ReadAsStringAsync();
                     ApiResponseModel responseModel = DeserializeJson<ApiResponseModel>(body);
-                    return responseModel.Status;
+
+                    return responseModel;
+                }
+                else
+                {
+                    return new ApiResponseModel()
+                    {
+                        Status = false
+                    };
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
-            return false;
+            return new ApiResponseModel()
+            {
+                Status = false
+            };
         }
 
         public static T DeserializeJson<T>(string json)

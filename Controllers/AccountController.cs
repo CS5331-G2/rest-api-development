@@ -16,6 +16,8 @@ using diary.Services;
 using Newtonsoft.Json.Linq;
 using diary.ApiModels.UsersController;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using diary.ApiModels;
 
 namespace diary.Controllers
 {
@@ -69,12 +71,22 @@ namespace diary.Controllers
                 loginModel.Password = model.Password;
 
                 RestClient rc = new RestClient();
-                var result = await rc.Login(loginModel);
+                ApiResponseModel responseModel = await rc.Login(loginModel);
+                ApiResultModel resultModel = responseModel.Result;
 
                 //var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result)
+                if (responseModel.Status && responseModel.Result != null)
                 {
                     await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
+
+                    AuthenticateUserResultModel authUserResultModel = null;
+
+                    if (resultModel.GetType() == typeof(AuthenticateUserResultModel))
+                    {
+                        authUserResultModel = (AuthenticateUserResultModel)resultModel;
+                        HttpContext.Session.SetString(SessionState.SessionKeyToken, authUserResultModel.Token);
+                    }
+
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal(returnUrl);
                 }

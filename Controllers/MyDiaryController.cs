@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using diary.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace diary.Controllers
@@ -29,7 +30,7 @@ namespace diary.Controllers
 
         //Change permission
         [HttpPost]
-        public IActionResult UpdatePost(String token, DiaryPost post)
+        public IActionResult UpdatePost(DiaryPost post)
         {
             if (string.IsNullOrEmpty(post.Id.ToString()))
             {
@@ -37,7 +38,7 @@ namespace diary.Controllers
             }
 
             RestClient rc = new RestClient();
-            var success = rc.Edit(token, post);
+            var success = rc.Edit(HttpContext.Session.GetString(SessionState.SessionKeyToken), post);
             
             if (post != null && success)
             {
@@ -65,7 +66,7 @@ namespace diary.Controllers
             }
 
             RestClient rc = new RestClient();
-            var success = rc.Create(post.Title, post);
+            var success = rc.Create(HttpContext.Session.GetString(SessionState.SessionKeyToken), post);
 
             return Redirect("/MyDiary");
         }
