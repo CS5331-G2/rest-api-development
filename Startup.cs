@@ -13,6 +13,7 @@ using diary.Models;
 using diary.Services;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace diary
 {
@@ -56,7 +57,11 @@ namespace diary
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddMvc();
+            services.AddMvc()
+                    .AddJsonOptions(options => 
+                    {
+                        options.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+                    });;
 
             // Adds a default in-memory implementation of IDistributedCache.
             services.AddDistributedMemoryCache();

@@ -213,12 +213,21 @@ namespace diary.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string body = await response.Content.ReadAsStringAsync();
-                    ApiResponseModel responseModel = JsonConvert.DeserializeObject<ApiResponseModel>(body);
+                    ApiResponseModel responseModel = DeserializeJson<ApiResponseModel>(body);
                     return responseModel.Status;
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
             return false;
+        }
+
+        public static T DeserializeJson<T>(string json)
+        {
+            T model = JsonConvert.DeserializeObject<T>(
+                json,
+                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
+            );
+            return model;
         }
     }
 }
