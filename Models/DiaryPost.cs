@@ -26,7 +26,7 @@ namespace diary.Models
 
         public string GetLink()
         {
-            return $"/Diary/Index/{Title}/";
+            return $"/MyDiary/{Title}/";
         }
 
         public static string CreateSlug(string title)

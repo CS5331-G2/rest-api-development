@@ -67,7 +67,7 @@ namespace diary.Controllers
             RestClient rc = new RestClient();
             var success = rc.Create(post.Title, post);
 
-            return Redirect(post.GetLink());
+            return Redirect("/MyDiary");
         }
 
         [HttpPost]
