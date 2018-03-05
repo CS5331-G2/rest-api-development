@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-#TEAMID=`md5sum README.md | cut -d' ' -f 1`
+TEAMID=`md5sum README.md | cut -d' ' -f 1`
 docker kill $(docker ps -q)
 docker rm $(docker ps -a -q)
 #docker build . -t $TEAMID
