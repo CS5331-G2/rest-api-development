@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -33,24 +34,67 @@ namespace diary.Controllers
             return View(posts);
         }
 
-        //Change permission
-        [HttpPost, ActionName("UpdatePost")]
-        public IActionResult UpdatePost(DiaryPost post)
+        [HttpGet]
+        public IActionResult Update(int? id)
         {
-            if (string.IsNullOrEmpty(post.Id.ToString()))
+            if (id == null)
             {
-                return RedirectToAction(nameof(MyDiaryController.Index), "MyDiary");
+                return NotFound();
             }
 
             RestClient rc = new RestClient();
-            var success = rc.Edit(HttpContext.Session.GetString(SessionState.SessionKeyToken), post);
-            
-            if (post != null && success)
+
+            var posts = rc.findAllAsync(HttpContext.Session.GetString(SessionState.SessionKeyToken)).Result.Select(p => new DiaryPost
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Author = p.Author,
+                PublishDate = p.PublishDate,
+                IsPublic = p.IsPublic,
+                Text = p.Text,
+            });
+
+            List<DiaryPost> model = new List<DiaryPost>(posts.Where(p => p.Id == id));
+
+
+            if (model.Count() == 0)
+            {
+                return RedirectToAction(nameof(MyDiaryController.Index), "MyDiary");
+            }
+            else
+            {
+                return View(model.First());
+            }
+        }
+
+        //Change permission
+        [HttpPost, ActionName("Update")]
+        public IActionResult Update(int id)
+        {
+            RestClient rc = new RestClient();
+
+            var posts = rc.findAllAsync(HttpContext.Session.GetString(SessionState.SessionKeyToken)).Result.Select(p => new DiaryPost
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Author = p.Author,
+                PublishDate = p.PublishDate,
+                IsPublic = p.IsPublic,
+                Text = p.Text,
+            });
+
+            List<DiaryPost> model = new List<DiaryPost>(posts.Where(p => p.Id == id));
+
+
+            if (model.Count() == 0)
             {
                 return RedirectToAction(nameof(MyDiaryController.Index), "MyDiary");
             }
 
-            return NotFound();
+            var post = model.First();
+            
+            var success = rc.Edit(HttpContext.Session.GetString(SessionState.SessionKeyToken), post);
+            return RedirectToAction(nameof(MyDiaryController.Index), "MyDiary");
         }
 
         //Create new post
@@ -96,9 +140,17 @@ namespace diary.Controllers
                 Text = p.Text,
             });
 
-            var model = posts.Where(p => p.Id == id);
+            List<DiaryPost> model = new List<DiaryPost>(posts.Where(p => p.Id == id));
 
-            return View(model);
+
+            if (model.Count() == 0)
+            {
+                return RedirectToAction(nameof(MyDiaryController.Index), "MyDiary");
+            }
+            else
+            {
+                return View(model.First());
+            }
         }
 
         [HttpPost, ActionName("Delete")]

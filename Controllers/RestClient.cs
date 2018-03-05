@@ -152,7 +152,7 @@ namespace diary.Controllers
                 {
                     Token = token,
                     Id = post.Id.ToString(),
-                    IsPublic = post.IsPublic
+                    IsPublic = !post.IsPublic
                 };
 
                 HttpResponseMessage response = client.PostAsync("diary/permission", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;

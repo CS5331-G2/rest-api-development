@@ -5,37 +5,31 @@
 }
 
 <article>
-    <table class="post-preview">
+    <div class="post-preview">
 
         <ul class="nav diary-posts">
             <li class="nav-item">
                 <h2><span class="navbar-text">@Model.Title</span></h2>
             </li>
             <li class="nav-item">
-                <table>
-                    <tr>
-                        <td>
-                            <a class="dropdown-item" asp-controller="MyDiary" asp-action="UpdatePost" asp-route-id="@Model.Id">Change Permission</a> | 
-                            <a class="dropdown-item" asp-controller="MyDiary" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-                        </td>
-                    </tr>
-                </table>
+                <a class="nav-link" asp-controller="MyDiary" asp-action="Update" asp-route-id="@Model.Id">Change Permission</a>
+                <a class="nav-link" asp-controller="MyDiary" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
             </li>
         </ul>
 
         <div>
             <i class="fa fa-user-circle"></i><span class="h5 text-muted"> Posted by @Model.Author, on @Model.PublishDate.ToString("MMM dd, yyyy")</span>
             @if (@Model.IsPublic)
-            {
-                <span class="badge badge-danger">Public</span>
-            }
-            else
-            {
-                <span class="badge badge-primary">Private</span>
+        {
+            <span class="badge badge-danger">Public</span>
+    }
+    else
+    {
+        <span class="badge badge-primary">Private</span>
 
-            }
+}
         </div>
         <p class="lead">@Html.Raw(@Model.Text)</p>
-        </div>
+    </div>
 </article>
 <hr>
