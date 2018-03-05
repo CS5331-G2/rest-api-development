@@ -10,12 +10,59 @@ using System.Threading.Tasks;
 using diary.ApiModels.UsersController;
 using Microsoft.AspNetCore.Mvc;
 using diary.ApiModels;
+using diary.ApiModels.MetaController;
 
 namespace diary.Controllers
 {
     public class RestClient
     {
         private static string BASE_URL = "http://localhost:" + diary.Program.WEBAPI_PORT + "/api";
+
+        public async Task<bool> HeartbeatAsync()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.GetAsync("meta/heartbeat").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<ApiResponseModel>(data).Status;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<String>> MembersAsync()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.GetAsync("meta/members").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<MembersResponse>(data).Result;
+                }
+
+                return new List<String>();
+            }
+            catch
+            {
+                return new List<String>();
+            }
+        }
 
         public async Task<IEnumerable<Diary>> FindAllAsync()
         {
@@ -52,7 +99,7 @@ namespace diary.Controllers
                     Token = token
                 };
 
-                HttpResponseMessage response = client.PostAsync("diary/", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
+                HttpResponseMessage response = client.PostAsync("diary", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
                 
                 if (response.IsSuccessStatusCode)
                 {
