@@ -5,45 +5,41 @@
 
 <!-- Main Content -->
 <div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-            @{
-                if (Model != null)
+    @{
+        if (Model != null)
+        {
+            if (Model.PostSummaries == null || !Model.PostSummaries.Any())
+            {
+                if (!User.Identity.IsAuthenticated)
                 {
-                    if (Model.PostSummaries == null || !Model.PostSummaries.Any())
-                    {
-                        if (!User.Identity.IsAuthenticated)
-                        {
-                            <h1>Welcome!</h1>
-                            <p>Get started and write your first diary post <a class="text-primary" asp-controller="Account" asp-action="Login">here</a>.</p>
-                            <p>Happy Expressing!</p>
-                        }
-                        else
-                        {
-                            <h1>Welcome!</h1>
-                            <p>Get started and write your first diary post <a class="text-primary" asp-controller="MyDiary" asp-action="Edit">here</a>.</p>
-                            <p>Happy Expressing!</p>
-                        }
-                    }
-                    else
-                    {
-                        <h4><small>RECENT POSTS</small></h4>
-                        <hr>
-
-                        foreach (var post in Model.PostSummaries)
-                        {
-                            <article>
-                                <div class="post-preview">
-                                    <h2><span>@post.Title</span></h2>
-                                    <div><i class="fa fa-clock-o"></i><span class="h5 text-muted"> Posted by @post.Author, on @post.PublishDate.ToString("MMM dd, yyyy")</span></div>
-                                    <p class="lead">@post.Text</p>
-                                </div>
-                            </article>
-                            <hr>
-                        }
-                    }
+                    <h1>Welcome!</h1>
+                    <p>Get started and write your first diary post <a class="text-primary" asp-controller="Account" asp-action="Login">here</a>.</p>
+                    <p>Happy Expressing!</p>
+                }
+                else
+                {
+                    <h1>Welcome!</h1>
+                    <p>Get started and write your first diary post <a class="text-primary" asp-controller="MyDiary" asp-action="Edit">here</a>.</p>
+                    <p>Happy Expressing!</p>
                 }
             }
-        </div>
-    </div>
+            else
+            {
+                <h4><small>RECENT POSTS</small></h4>
+                <hr>
+
+                foreach (var post in Model.PostSummaries)
+                {
+                    <article>
+                        <div class="post-preview">
+                            <h2><span>@post.Title</span></h2>
+                            <div><i class="fa fa-clock-o"></i><span class="h5 text-muted"> Posted by @post.Author, on @post.PublishDate.ToString("MMM dd, yyyy")</span></div>
+                            <p class="lead">@post.Text</p>
+                        </div>
+                    </article>
+                    <hr>
+                }
+            }
+        }
+    }
 </div>

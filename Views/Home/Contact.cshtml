@@ -4,14 +4,27 @@
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
-<address>
+@if (ViewData["List"] != null)
+{
+    <span>We are</span>
+    if (ViewData.Values != null && ViewData.Values.Count() > 0)
+    {
+        foreach (var item in ViewData["List"] as List<String>)
+        {
+            <ul><li>@item</li></ul>
+        }
+    }
+}
+
+
+<address style="display:none">
     One Microsoft Way<br />
     Redmond, WA 98052-6399<br />
     <abbr title="Phone">P:</abbr>
     425.555.0100
 </address>
 
-<address>
+<address style="display:none">
     <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
     <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
 </address>

@@ -30,6 +30,7 @@ namespace diary.Models.AccountViewModels
         public string FullName { get; set; }
 
         [Required]
+        [Range(1, 120, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         [Display(Name = "Age")]
         public int Age { get; set; }
     }

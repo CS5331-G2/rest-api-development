@@ -35,14 +35,34 @@ namespace diary.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            RestClient rc = new RestClient();
+            var isUP = rc.HeartbeatAsync();
 
+            if(isUP.Result)
+            {
+                ViewData["Message"] = "Web API Service is up.";
+            }
+            else
+            {
+                ViewData["Message"] = "Web API Service is down.";
+            }
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            RestClient rc = new RestClient();
+            var isUP = rc.MembersAsync();
+
+            if (isUP.Result.Count != 0)
+            {
+                ViewData["Message"] = "This is done by a team of " + isUP.Result.Count+ "  NUS students.";
+                ViewData["List"] = isUP.Result;
+            }
+            else
+            {
+                ViewData["Message"] = "Web API Service is down.";
+            }
 
             return View();
         }
