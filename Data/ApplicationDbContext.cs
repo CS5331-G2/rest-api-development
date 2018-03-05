@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using diary.Models;
@@ -43,8 +40,7 @@ namespace diary.Data
 
         public ApplicationUser GetUserWithToken(string uuidV4Token)
         {
-            // TODO: With uuidv4 token, find user. Return null if no such token exists
-            return new ApplicationUser();
+            return Users.Where(p => p.UuidV4Token == uuidV4Token).FirstOrDefault();
         }
     }
 }

@@ -2,25 +2,34 @@
 @{
     ViewData["Title"] = Model.Title;
     ViewData["Description"] = Model.Text;
-    string host = Context.Request.Scheme + "://" + Context.Request.Host;
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section Head {
-    <link rel="canonical" href="@(host + Model.GetLink())" />
-}
+<article>
+    <div class="post-preview">
 
-<article class="post container" itemscope itemtype="http://schema.org/BlogPosting" itemprop="blogPost">
-    <header>
-        <h1 itemprop="name headline"><a href="@Model.GetLink()" rel="canonical" itemprop="url">@Model.Title</a></h1>
-        <time datetime="@Model.PublishDate.ToString("s")" itemprop="datePublished">Published @Model.PublishDate.ToString("MMM d, yyyy")</time>
-        @if (User.Identity.IsAuthenticated)
+        <ul class="nav diary-posts">
+            <li class="nav-item">
+                <h2><span class="navbar-text">@Model.Title</span></h2>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="MyDiary" asp-action="Update" asp-route-id="@Model.Id">Change Permission</a>
+                <a class="nav-link" asp-controller="MyDiary" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            </li>
+        </ul>
+
+        <div>
+            <i class="fa fa-user-circle"></i><span class="h5 text-muted"> Posted by @Model.Author, on @Model.PublishDate.ToString("MMM dd, yyyy")</span>
+            @if (@Model.IsPublic)
         {
-            <a asp-controller="MyDiary" asp-action="UpdatePost" asp-route-id="@Model.Id" title="Edit the post">Edit post</a>
-        }
-    </header>
+            <span class="badge badge-danger">Public</span>
+    }
+    else
+    {
+        <span class="badge badge-primary">Private</span>
 
-    <div itemprop="articleBody mainEntityOfPage" cdnify>
-        @Html.Raw(Model)
+}
+        </div>
+        <p class="lead">@Html.Raw(@Model.Text)</p>
     </div>
 </article>
+<hr>

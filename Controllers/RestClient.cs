@@ -1,4 +1,5 @@
-﻿using diary.Models;
+﻿using diary.ApiModels.DiaryController;
+using diary.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,26 +7,76 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using diary.ApiModels.UsersController;
+using Microsoft.AspNetCore.Mvc;
+using diary.ApiModels;
+using diary.ApiModels.MetaController;
 
 namespace diary.Controllers
 {
     public class RestClient
     {
-        private string Base_URL = "http://localhost/api/";
+        private static string BASE_URL = "http://localhost:" + diary.Program.WEBAPI_PORT + "/api";
 
-        public async Task<IEnumerable<Diary>> findAllAsync()
+        public async Task<bool> HeartbeatAsync()
         {
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(Base_URL);
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.GetAsync("meta/heartbeat").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<ApiResponseModel>(data).Status;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<String>> MembersAsync()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.GetAsync("meta/members").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<MembersResponse>(data).Result;
+                }
+
+                return new List<String>();
+            }
+            catch
+            {
+                return new List<String>();
+            }
+        }
+
+        public async Task<IEnumerable<Diary>> FindAllAsync()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage response = client.GetAsync("diary").Result;
 
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Diary>>(data);
+                    return JsonConvert.DeserializeObject<RetrieveDiaryResponse>(data).Result;
                 }
                 return new List<Diary>();
             }
@@ -35,19 +86,25 @@ namespace diary.Controllers
             }
         }
 
-        public async Task<IEnumerable<Diary>> findAllAsync(String username)
+        public async Task<IEnumerable<Diary>> findAllAsync(String token)
         {
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(Base_URL);
+                client.BaseAddress = new Uri(BASE_URL);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = client.GetAsync("diary/" + username).Result;
+
+                RetrieveDiaryRequest diaryRequest = new RetrieveDiaryRequest
+                {
+                    Token = token
+                };
+
+                HttpResponseMessage response = client.PostAsync("diary", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Diary>>(data);
+                    return JsonConvert.DeserializeObject<RetrieveDiaryResponse>(data).Result;
                 }
                 return new List<Diary>();
             }
@@ -57,74 +114,147 @@ namespace diary.Controllers
             }
         }
 
-        public async Task<DiaryPost> findAsync(int id)
+        public bool Create(String token, DiaryPost post)
         {
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(Base_URL);
+                client.BaseAddress = new Uri(BASE_URL);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = client.GetAsync("diary/" + id).Result;
 
+                CreateDiaryRequest diaryRequest = new CreateDiaryRequest
+                {
+                    Token = token,
+                    Title = post.Title,
+                    IsPublic = post.IsPublic,
+                    Text = post.Text
+                };
+
+                HttpResponseMessage response = client.PostAsync("diary/create", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
+
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool Edit(String token, DiaryPost post)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                AdjustDiaryPermissionRequest diaryRequest = new AdjustDiaryPermissionRequest
+                {
+                    Token = token,
+                    Id = post.Id.ToString(),
+                    IsPublic = !post.IsPublic
+                };
+
+                HttpResponseMessage response = client.PostAsync("diary/permission", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
+
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool Delete(String token, int id)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                DeleteDiaryRequest diaryRequest = new DeleteDiaryRequest
+                {
+                    Token = token,
+                    Id = id.ToString()
+                };
+
+                HttpResponseMessage response = client.PostAsync("diary/delete", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
+
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool Register(RegisterUserRequest user)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.PostAsync("users/register", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool Logout(ExpireUserRequest user)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.PostAsync("users/expire", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<ApiResponseModel> Login(AuthenticateUserRequest user)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(BASE_URL);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response = client.PostAsync("users/authenticate", new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    string data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<DiaryPost>(data);
+                    string body = await response.Content.ReadAsStringAsync();
+                    ApiResponseModel responseModel = DeserializeJson<ApiResponseModel>(body);
+
+                    return responseModel;
                 }
-                return null;
+                else
+                {
+                    return new ApiResponseModel()
+                    {
+                        Status = false
+                    };
+                }
             }
-            catch
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            return new ApiResponseModel()
             {
-                return null;
-            }
+                Status = false
+            };
         }
-        public bool Create(Diary post)
-        {
-            try
-            {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(Base_URL);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = client.PostAsync("diary", new StringContent(JsonConvert.SerializeObject(post), Encoding.UTF8, "application/json")).Result;
 
-                return response.IsSuccessStatusCode;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-        public bool Edit(DiaryPost post)
+        public static T DeserializeJson<T>(string json)
         {
-            try
-            {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(Base_URL);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = client.PostAsync("diary/" + post.Author, new StringContent(JsonConvert.SerializeObject(post), Encoding.UTF8, "application/json")).Result;
-
-
-                return response.IsSuccessStatusCode;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-        public bool Delete(int id)
-        {
-            try
-            {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(Base_URL);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = client.DeleteAsync("diary/" + id).Result;
-                return response.IsSuccessStatusCode;
-            }
-            catch
-            {
-                return false;
-            }
+            T model = JsonConvert.DeserializeObject<T>(
+                json,
+                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
+            );
+            return model;
         }
     }
 }

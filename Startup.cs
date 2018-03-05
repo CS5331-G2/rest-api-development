@@ -13,6 +13,7 @@ using diary.Models;
 using diary.Services;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace diary
 {
@@ -56,7 +57,21 @@ namespace diary
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddMvc();
+            services.AddMvc()
+                    .AddJsonOptions(options => 
+                    {
+                        options.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+                    });;
+
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
+
+            //Add session
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".Diary.Session";
+                options.IdleTimeout = TimeSpan.FromSeconds(3600);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +88,8 @@ namespace diary
             }
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+
+            app.UseSession();
 
             app.UseStaticFiles();
 

@@ -52,6 +52,11 @@ blockquote {
     margin-top: 60px;
 }
 
+.diary-posts {
+    display: flex;
+    justify-content: space-between;
+}
+
 .caption {
     font-size: 14px;
     font-style: italic;

@@ -16,6 +16,19 @@
             }
             else
             {
+                <ul class="nav nav-pills diary-posts">
+                    <li class="nav-item">
+                        <span class="h4 navbar-text">
+                            <small>DIARY POSTS</small>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-controller="MyDiary" asp-action="Edit">New post</a>
+                    </li>
+                </ul>
+
+                <hr />
+
                 foreach (var post in Model)
                 {
                     await Html.RenderPartialAsync("Post.cshtml", post);
