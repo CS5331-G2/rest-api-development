@@ -100,11 +100,11 @@ If a response is received, you're good to go.
 
 #### Question 1: Briefly describe the web technology stack used in your implementation.
 
-Answer: .Net Core Framework 2.0 :metal:
+Answer: We used ASP.NET Core for the web front-end and along with it, Web API to build our RESTful endpoints. .NET Core is a recent technology offered by Microsoft that enables cross-platform development, similar to what Java is capable of. For the database component, we have used Microsoft SQL Server. For web server to interact with the database, we used EntityFramework, an Object-Relational Mapping Framework, to generate the required SQL to query datasets from the database. This removes the need to write SQL and possibly reducing the attack surface stemming from SQL-related constructs.
 
 #### Question 2: Are there any security considerations your team thought about?
 
-Answer: Avoid the usual XSS, SQL Injection & proper session handling.
+Answer: Avoid the usual XSS, CSRF, SQL Injection & proper session handling.
 
 #### Question 3: Are there any improvements you would make to the API specification to improve the security of the web application?
 
@@ -112,7 +112,7 @@ Answer: Implement JWT Tokens. Query API over https.
 
 #### Question 4: Are there any additional features you would like to highlight?
 
-Answer: The fact that we're probably the only group who used .Net?
+Answer: The fact that we're probably the only group who used .NET Core! And an ORM that removes the need to know any SQL. :sunglasses:
 
 #### Question 5: Is your web application vulnerable? If yes, how and why? If not, what measures did you take to secure it?
 
@@ -120,7 +120,7 @@ Answer: Of course not? One of the most secure Web Application ever coded within 
 
 #### Feedback: Is there any other feedback you would like to give?
 
-Answer: 🤷
+Answer: The API specs seemed to be less consistent after the errata was made. Optional fields that were present only when that had a value did not pose any consistency issues. However, after the errata was made, the `result` field became less consistent. Some API responses had keys nested within the `result` field while others did not have keys present. `POST /diary/create` and `POST /diary` were some examples.
 
 ### Declaration
 
