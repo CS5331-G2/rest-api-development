@@ -14,8 +14,8 @@ namespace diary.Controllers
         public IActionResult Index()
         {
             RestClient rc = new RestClient();
-            //change to token
-            var posts = rc.findAllAsync(User.Identity.Name).Result.Select(p => new DiaryPost
+
+            var posts = rc.findAllAsync(HttpContext.Session.GetString(SessionState.SessionKeyToken)).Result.Select(p => new DiaryPost
             {
                 Id = p.Id,
                 Title = p.Title,
