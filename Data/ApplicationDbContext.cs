@@ -40,7 +40,7 @@ namespace diary.Data
 
         public ApplicationUser GetUserWithToken(string uuidV4Token)
         {
-            return Users.ToList().FirstOrDefault(p => p.UuidV4Token == uuidV4Token);
+            return Users.Where(p => p.UuidV4Token == uuidV4Token).FirstOrDefault();
         }
     }
 }
