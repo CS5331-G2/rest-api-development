@@ -144,6 +144,7 @@ namespace diary.Controllers
             expireUser.Token = HttpContext.Session.GetString(SessionState.SessionKeyToken);
             RestClient rc = new RestClient();
             rc.Logout(expireUser);
+            HttpContext.Session.Clear();
             _logger.LogInformation("User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
