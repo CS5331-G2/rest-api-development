@@ -14,7 +14,7 @@ namespace diary.Controllers
     {
         private string Base_URL = "http://localhost/api/";
 
-        public async Task<IEnumerable<Diary>> findAllAsync()
+        public async Task<IEnumerable<Diary>> FindAllAsync()
         {
             try
             {
@@ -26,7 +26,7 @@ namespace diary.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Diary>>(data);
+                    return JsonConvert.DeserializeObject<RetrieveDiaryResponse>(data).Result;
                 }
                 return new List<Diary>();
             }
@@ -44,15 +44,17 @@ namespace diary.Controllers
                 client.BaseAddress = new Uri(Base_URL);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                RetrieveDiaryRequest diaryRequest = new RetrieveDiaryRequest();
-                diaryRequest.Token = token;
+                RetrieveDiaryRequest diaryRequest = new RetrieveDiaryRequest
+                {
+                    Token = token
+                };
 
                 HttpResponseMessage response = client.PostAsync("diary/", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
                 
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Diary>>(data);
+                    return JsonConvert.DeserializeObject<RetrieveDiaryResponse>(data).Result;
                 }
                 return new List<Diary>();
             }
@@ -70,11 +72,13 @@ namespace diary.Controllers
                 client.BaseAddress = new Uri(Base_URL);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                CreateDiaryRequest diaryRequest = new CreateDiaryRequest();
-                diaryRequest.Token = token;
-                diaryRequest.Title = post.Title;
-                diaryRequest.IsPublic = post.IsPublic;
-                diaryRequest.Text = post.Text;
+                CreateDiaryRequest diaryRequest = new CreateDiaryRequest
+                {
+                    Token = token,
+                    Title = post.Title,
+                    IsPublic = post.IsPublic,
+                    Text = post.Text
+                };
 
                 HttpResponseMessage response = client.PostAsync("diary/create", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
 
@@ -94,10 +98,12 @@ namespace diary.Controllers
                 client.BaseAddress = new Uri(Base_URL);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                AdjustDiaryPermissionRequest diaryRequest = new AdjustDiaryPermissionRequest();
-                diaryRequest.Token = token;
-                diaryRequest.Id = post.Id.ToString();
-                diaryRequest.IsPublic = post.IsPublic;
+                AdjustDiaryPermissionRequest diaryRequest = new AdjustDiaryPermissionRequest
+                {
+                    Token = token,
+                    Id = post.Id.ToString(),
+                    IsPublic = post.IsPublic
+                };
 
                 HttpResponseMessage response = client.PostAsync("diary/permission", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
 
@@ -116,9 +122,11 @@ namespace diary.Controllers
                 client.BaseAddress = new Uri(Base_URL);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                DeleteDiaryRequest diaryRequest = new DeleteDiaryRequest();
-                diaryRequest.Token = token;
-                diaryRequest.Id = id.ToString();
+                DeleteDiaryRequest diaryRequest = new DeleteDiaryRequest
+                {
+                    Token = token,
+                    Id = id.ToString()
+                };
 
                 HttpResponseMessage response = client.PostAsync("diary/delete", new StringContent(JsonConvert.SerializeObject(diaryRequest), Encoding.UTF8, "application/json")).Result;
 

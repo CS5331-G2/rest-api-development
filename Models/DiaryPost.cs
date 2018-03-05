@@ -13,11 +13,9 @@ namespace diary.Models
     {
         private static List<string> reservedChars = new List<string> { "!", "#", "$", "&", "'", "(", ")", "*", ",", "/", ":", ";", "=", "?", "@", "[", "]", "\"", "%", ".", "<", ">", "\\", "^", "_", "'", "{", "}", "|", "~", "`", "+" };
 
-        [Required]
         public int Id { get; set; }
         [Required]
         public string Title { get; set; }
-        [Required]
         public string Author { get; set; }
         [Required]
         [Display(Name = "Description")]
@@ -25,11 +23,10 @@ namespace diary.Models
         [Required]
         public bool IsPublic { get; set; }
         public DateTime PublishDate { get; set; } = DateTime.UtcNow;
-        public String Token { get; set; }
 
         public string GetLink()
         {
-            return $"/Diary/{Title}/";
+            return $"/Diary/Index/{Title}/";
         }
 
         public static string CreateSlug(string title)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using diary.Models;
@@ -27,6 +28,7 @@ namespace diary.Controllers
         }
 
         //Change permission
+        [HttpPost]
         public IActionResult UpdatePost(String token, DiaryPost post)
         {
             if (string.IsNullOrEmpty(post.Id.ToString()))
@@ -46,7 +48,16 @@ namespace diary.Controllers
         }
 
         //Create new post
-        public IActionResult Edit(String token, DiaryPost post)
+        [HttpGet]
+        public IActionResult Edit(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(new DiaryPost());
+        }
+
+        //Create new post
+        [HttpPost]
+        public IActionResult Edit(DiaryPost post)
         {
             if (!ModelState.IsValid)
             {
@@ -54,11 +65,12 @@ namespace diary.Controllers
             }
 
             RestClient rc = new RestClient();
-            var success = rc.Create(token, post);
+            var success = rc.Create(post.Title, post);
 
             return Redirect(post.GetLink());
         }
 
+        [HttpPost]
         public IActionResult Delete(String token, int id)
         {
             RestClient rc = new RestClient();
