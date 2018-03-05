@@ -13,6 +13,11 @@ namespace diary.Controllers
     {
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString(SessionState.SessionKeyToken) == null || HttpContext.Session.GetString(SessionState.SessionKeyToken).Length == 0)
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            
             RestClient rc = new RestClient();
 
             var posts = rc.findAllAsync(HttpContext.Session.GetString(SessionState.SessionKeyToken)).Result.Select(p => new DiaryPost
@@ -29,12 +34,12 @@ namespace diary.Controllers
         }
 
         //Change permission
-        [HttpPost]
+        [HttpPost, ActionName("UpdatePost")]
         public IActionResult UpdatePost(DiaryPost post)
         {
             if (string.IsNullOrEmpty(post.Id.ToString()))
             {
-                return View(new DiaryPost());
+                return RedirectToAction(nameof(MyDiaryController.Index), "MyDiary");
             }
 
             RestClient rc = new RestClient();
@@ -42,7 +47,7 @@ namespace diary.Controllers
             
             if (post != null && success)
             {
-                return View(post);
+                return RedirectToAction(nameof(MyDiaryController.Index), "MyDiary");
             }
 
             return NotFound();
@@ -68,15 +73,40 @@ namespace diary.Controllers
             RestClient rc = new RestClient();
             var success = rc.Create(HttpContext.Session.GetString(SessionState.SessionKeyToken), post);
 
-            return Redirect("/MyDiary");
+            return RedirectToAction(nameof(MyDiaryController.Index), "MyDiary");
         }
 
-        [HttpPost]
-        public IActionResult Delete(String token, int id)
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            RestClient rc = new RestClient();
+
+            var posts = rc.findAllAsync(HttpContext.Session.GetString(SessionState.SessionKeyToken)).Result.Select(p => new DiaryPost
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Author = p.Author,
+                PublishDate = p.PublishDate,
+                IsPublic = p.IsPublic,
+                Text = p.Text,
+            });
+
+            var model = posts.Where(p => p.Id == id);
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult Delete(int id)
         {
             RestClient rc = new RestClient();
-            rc.Delete(token, id);
-            return Redirect("/MyDiary");
+            var success = rc.Delete(HttpContext.Session.GetString(SessionState.SessionKeyToken), id);
+            return RedirectToAction(nameof(MyDiaryController.Index), "MyDiary");
         }
 
         public IActionResult Error()
